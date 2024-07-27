@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: ;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --chart-1: 173 58% 39%;
+    --chart-2: 12 76% 61%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    padding-bottom: 200px;
+  }
+}
+
+.footerbottom {
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+  width: 100%;
+  background: #ffffffff;
+  font-weight: 800;
+  border-radius: 16px 16px 0px 0px;
+  box-shadow:
+    0px 2px 5px #171a1f,
+    0px 0px 2px #171a1f; /* shadow-s */
+  z-index: 9999999;
+}
+
+.logoofvita {
+  height: 55px;
+}
+
+.boxstyle {
+  height: 90px;
+  background: #ffffffff; /* white */
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow:
+    rgba(17, 17, 26, 0.05) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 0px 8px;
+}
+
+.qrOnDiv {
+  position: absolute;
+  top: 0;
+  height: 50%;
+  width: 100%;
+  margin: 10px;
+  background: transparent;
+  display: flex;
+
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}
+.scanner {
+  height: 2px;
+  width: 80%;
+  background-color: white;
+  position: absolute;
+  animation: scan 1s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #5a5dfe; /* Main button color */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 0 3px rgba(90, 93, 254, 0.3); /* Outline shadow */
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-button:hover {
+  background-color: #4447c0; /* Darker shade on hover */
+}
+
+.custom-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.custom-button .icon {
+  margin-right: 8px;
+}
+
+.custom-button:active {
+  transform: scale(0.98);
+}
+
+.fixed {
+  top: 0px !important;
+}
+
+video {
+  height: 200px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.imageforphoto {
+  height: 200px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.customdiv {
+  background: #ffffffff; /* white */
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: #bdc1caff; /* neutral-400 */
+  border-style: solid;
+  padding: 20px;
+  box-shadow: 0 0 0 3px rgba(90, 93, 254, 0.3);
+  position: relative;
+}
+.badge {
+  background-color: #004d4d; /* Dark teal color */
+  color: white;
+  padding: 10px 10px;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  position: absolute;
+  top: -3px;
+  right: 20px;
+}
+
+.badge-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.bg-custom-image {
+  background-image: url("../assets/FoodItems.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 1;
+  transition: scale 0.3s;
+}
+.bg-custom-image:hover {
+  scale: 1.2;
+}
+
+.bg-custum-2-image {
+  background-image: url("../assets/products.png");
+  background-size: cover;
+  background-position: 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 1;
+  transition: scale 0.3s;
+}
+
+.bg-custom-2-image:hover {
+  scale: 1.2;
+}
+
+.bg-custum-3-image {
+  background-image: url("../assets/pills.png");
+  background-size: cover;
+  background-position: 100%;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 1;
+  transition: scale 0.3s;
+}
+
+.bg-custom-3-image:hover {
+  scale: 1.2;
+}
+.h-ninty {
+  height: 90vh;
+}
