@@ -48,7 +48,11 @@ SnapLens is an innovative application designed to enhance personal well-being an
 By offering a comprehensive solution that bridges the information gap for consumers, SnapLens aims to:
 - Empower individuals to make healthier dietary choices, improving overall health and well-being.
 - Foster environmental consciousness, promoting sustainable consumption habits.
-- Enhance medication safety and efficacy, reducing the risk of adverse health effects.
+- Enhance ![Screenshot 2024-07-27 113152](https://github.com/user-attachments/assets/f15b5eef-ce80-45e0-b100-cd9d31465cc1)
+medication safety and efficacy, reducing the risk of adverse health effects.
+
+
+
 
 Overall, SnapLens strives to create a positive impact on both human health and the environment, contributing to a healthier and more sustainable future.
 
