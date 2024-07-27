@@ -47,7 +47,7 @@ import {
 import Webcam from "react-webcam";
 import { Button } from "./components/ui/button";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-const genAi = new GoogleGenerativeAI("apikey");
+const genAi = new GoogleGenerativeAI("text");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 import somegood from "./assets/leaf.png";
