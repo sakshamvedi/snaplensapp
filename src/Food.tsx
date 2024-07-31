@@ -47,9 +47,9 @@ import {
 import Webcam from "react-webcam";
 import { Button } from "./components/ui/button";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-const genAi = new GoogleGenerativeAI("apikey");
+const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+import loader from "./assets/pokebal.gif";
 import somegood from "./assets/somegood.png";
 import qrcode from "./assets/QhBk2.png";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +70,7 @@ function Food({}: Props) {
   const [imageSrc, setImageSrc] = React.useState(somegood);
   const webcamRef = useRef<Webcam>(null);
   const [foodData, setFoodData] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
   const [isScanning, setIsScanning] = React.useState(true);
   const [foodName, setFoodName] = useState("");
   const [dietaryRecommendations, setDietaryRecommendations] = useState([]);
@@ -77,7 +78,57 @@ function Food({}: Props) {
   const [micronutrients, setMicronutrients] = useState([]);
   const [nutritionalFacts, setNutritionalFacts] = useState([]);
   const [score, setScore] = useState(0);
+  function storeInDb(foodName) {
+    if (typeof localStorage !== "undefined") {
+      let arr = JSON.parse(localStorage.getItem("foodName") || "[]");
+      arr.push(foodName);
+      localStorage.setItem("foodName", JSON.stringify(arr));
+    }
+  }
 
+  const uploadPhoto = async (file) => {
+    try {
+      const photoId = await storePhotoLocally(file);
+      return photoId;
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      throw error;
+    }
+  };
+  const fileToDataURL = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const storePhotoLocally = async (file) => {
+    try {
+      const dataURL = await fileToDataURL(file);
+      const photoId = `photo_${Date.now()}`;
+      const photoData = {
+        id: photoId,
+        url: dataURL,
+        name: file.name,
+        timestamp: Date.now(),
+      };
+
+      // Store the photo data
+      localStorage.setItem(photoId, JSON.stringify(photoData));
+
+      // Update the list of photo IDs
+      const photoIds = JSON.parse(localStorage.getItem("photoIds") || "[]");
+      photoIds.push(photoId);
+      localStorage.setItem("photoIds", JSON.stringify(photoIds));
+
+      return photoId;
+    } catch (error) {
+      console.error("Error storing photo locally:", error);
+      throw error;
+    }
+  };
   function getRandomHslColor() {
     const hue = Math.floor(Math.random() * 360); // Random hue between 0 and 360
     const saturation = Math.floor(Math.random() * 50) + 50; // Random saturation between 50% and 100%
@@ -122,6 +173,7 @@ function Food({}: Props) {
   }
 
   async function generateCorbonFootprint() {
+    setLoading(true);
     const prompt = `As an expert nutritionist, analyze the following food image and provide:
   0. Name of the food
   1. Key nutritional facts (list 2 main points)
@@ -139,6 +191,7 @@ function Food({}: Props) {
         mimeType: "image/jpeg",
       },
     };
+    uploadPhoto(imageSrc);
 
     const result = await model.generateContent([prompt, image]);
     const response = result.response;
@@ -146,7 +199,9 @@ function Food({}: Props) {
     try {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
+      setLoading(false);
       setFoodName(parsedResponse.name);
+      storeInDb(parsedResponse.name);
       setDietaryRecommendations(parsedResponse.dietaryRecommendations);
       setHealthImpact(parsedResponse.healthImpact);
       setMicronutrients(parsedResponse.micronutrients);
@@ -154,6 +209,7 @@ function Food({}: Props) {
       setScore(parsedResponse.score); // Assuming there's a score in the response
     } catch (error) {
       console.log(error);
+      alert(error);
     }
   }
 
@@ -217,110 +273,131 @@ function Food({}: Props) {
             Scan Captured Food
           </DrawerTrigger>
           <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Food Report with ❤️</DrawerTitle>
-              <DrawerDescription>
-                <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
-                  Food : {foodName}
-                </p>
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4 overflow-y-auto h-full">
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Micronutrients</h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {micronutrients.map((nutrient, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-4 font-bold bg-red-200 p-2 rounded-md"
-                    >
-                      <p>{index + 1}.</p> {nutrient.name}: {nutrient.percentage}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+            {loading ? (
+              <>
+                <DrawerHeader>
+                  <DrawerTitle>Food Analyzer</DrawerTitle>
+                  <img src={loader}></img>
+                </DrawerHeader>
+              </>
+            ) : (
+              <>
+                <DrawerHeader>
+                  <DrawerTitle>Food Report with ❤️</DrawerTitle>
+                  <DrawerDescription>
+                    <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
+                      Food : {foodName}
+                    </p>
+                  </DrawerDescription>
+                </DrawerHeader>
+                <div className="p-4 overflow-y-auto h-full">
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Micronutrients
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {micronutrients.map((nutrient, index) => (
+                        <li
+                          key={index}
+                          className="flex gap-4 font-bold bg-red-200 p-2 rounded-md"
+                        >
+                          <p>{index + 1}.</p> {nutrient.name}:{" "}
+                          {nutrient.percentage}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Key Nutritional Facts
-                </h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {nutritionalFacts.map((fact, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-4 font-bold bg-indigo-100 p-2 rounded-md"
-                    >
-                      <p>{index + 1}.</p> {fact}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Key Nutritional Facts
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {nutritionalFacts.map((fact, index) => (
+                        <li
+                          key={index}
+                          className="flex gap-4 font-bold bg-indigo-100 p-2 rounded-md"
+                        >
+                          <p>{index + 1}.</p> {fact}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Dietary Recommendations
-                </h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {dietaryRecommendations.map((recommendation, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-4 font-bold bg-green-200 p-2 rounded-md"
-                    >
-                      <p>{index + 1}.</p> {recommendation}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Dietary Recommendations
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {dietaryRecommendations.map((recommendation, index) => (
+                        <li
+                          key={index}
+                          className="flex gap-4 font-bold bg-green-200 p-2 rounded-md"
+                        >
+                          <p>{index + 1}.</p> {recommendation}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">Health Impact</h3>
-                <p className="bg-green-200 p-2 rounded-md">{healthImpact}</p>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Health Impact
+                    </h3>
+                    <p className="bg-green-200 p-2 rounded-md">
+                      {healthImpact}
+                    </p>
+                  </section>
 
-              <div className="my-20">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Micro Nutrients</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ChartContainer config={chartConfig}>
-                      <RadialBarChart
-                        data={chartData}
-                        startAngle={-90}
-                        endAngle={380}
-                        innerRadius={30}
-                        outerRadius={110}
-                      >
-                        <ChartTooltip
-                          cursor={false}
-                          content={
-                            <ChartTooltipContent hideLabel nameKey="nutrient" />
-                          }
-                        />
-                        <RadialBar dataKey="percentage" background>
-                          <LabelList
-                            position="insideStart"
-                            dataKey="nutrient"
-                            className="fill-black capitalize mix-blend-luminosity"
-                            fontSize={16}
-                          />
-                        </RadialBar>
-                      </RadialBarChart>
-                    </ChartContainer>
-                  </CardContent>
-                  <CardFooter className="flex-col items-start gap-2 text-sm">
-                    <div className="flex gap-2 font-medium leading-none">
-                      Nutrient intake improved by 5.2% this month{" "}
-                      <TrendingUp className="h-4 w-4" />
-                    </div>
-                    <div className="leading-none text-muted-foreground">
-                      Showing micronutrient percentages based on recommended
-                      daily intake
-                    </div>
-                  </CardFooter>
-                </Card>
-              </div>
-            </div>
+                  <div className="my-20">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Micro Nutrients</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <ChartContainer config={chartConfig}>
+                          <RadialBarChart
+                            data={chartData}
+                            startAngle={-90}
+                            endAngle={380}
+                            innerRadius={30}
+                            outerRadius={110}
+                          >
+                            <ChartTooltip
+                              cursor={false}
+                              content={
+                                <ChartTooltipContent
+                                  hideLabel
+                                  nameKey="nutrient"
+                                />
+                              }
+                            />
+                            <RadialBar dataKey="percentage" background>
+                              <LabelList
+                                position="insideStart"
+                                dataKey="nutrient"
+                                className="fill-black capitalize mix-blend-luminosity"
+                                fontSize={16}
+                              />
+                            </RadialBar>
+                          </RadialBarChart>
+                        </ChartContainer>
+                      </CardContent>
+                      <CardFooter className="flex-col items-start gap-2 text-sm">
+                        <div className="flex gap-2 font-medium leading-none">
+                          Nutrient intake improved by 5.2% this month{" "}
+                          <TrendingUp className="h-4 w-4" />
+                        </div>
+                        <div className="leading-none text-muted-foreground">
+                          Showing micronutrient percentages based on recommended
+                          daily intake
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                </div>
+              </>
+            )}
 
             <DrawerFooter>
               <DrawerClose>

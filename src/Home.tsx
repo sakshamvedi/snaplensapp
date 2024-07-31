@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import vitalogo from "./assets/vita.jpg";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
 import profilelogo from "./assets/saksham.jpeg";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
+const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 import {
   AppleIcon,
   BananaIcon,
+  Bold,
   CarrotIcon,
   CherryIcon,
   Grape,
@@ -33,21 +40,230 @@ function getCurrentDayAndDate() {
   const date = new Date();
   const day = daysOfWeek[date.getDay()];
   const formattedDate = date.toLocaleDateString();
-
   return `${day}, ${formattedDate}`;
 }
 
 function Home({}: Props) {
+  const [desc, setDesc] = useState("");
+  const [generalInfor, setGeneralInfo] = useState("");
+  const [healthScore, setHealthScore] = useState("");
+  const [healthyMeals, setHealthyMeals] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [carbs, setCarbs] = useState("");
+  const [protien, setProtien] = useState("");
+  const [fat, setFat] = useState("");
+  React.useEffect(() => {
+    setAvatar(localStorage.getItem("name"));
+    const SIX_HOURS_IN_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    const lastExecutionTime = localStorage.getItem("lastReportGenerationTimes");
+    const currentTime = new Date().getTime();
+
+    if (
+      !lastExecutionTime ||
+      currentTime - parseInt(lastExecutionTime, 10) >= SIX_HOURS_IN_MS
+    ) {
+      generatePersonReport();
+      generateCorbonFootprint();
+      localStorage.setItem("lastReportGenerationTimes", currentTime.toString());
+    } else {
+      const parsedResponse = JSON.parse(
+        localStorage.getItem("mypersonalfoodreport")
+      );
+      try {
+        console.log(parsedResponse.generalinfo[0]);
+        setDesc(parsedResponse.generalinfo[0]);
+        setHealthScore(parsedResponse.healthscore[0]);
+        setHealthyMeals(parsedResponse.healthymeals[0]);
+        setCarbs(parsedResponse.carbs[0]);
+        setProtien(parsedResponse.protien[0]);
+        localStorage.setItem("proteineaten", parsedResponse.protien[0]);
+        setFat(parsedResponse.fat[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, []);
+  async function generatePersonReport() {
+    const foodheeaten = localStorage.getItem("foodName");
+    const medicine = localStorage.getItem("medicineName");
+    const product = localStorage.getItem("product");
+    const gender = localStorage.getItem("gender");
+    const prompt = `Analyze the following food consumption data for an individual:
+Food items consumed: ${foodheeaten}
+Based on this information, provide a concise report including:
+
+Food Score: Calculate a score from 0-100, where 100 represents a perfectly balanced, nutritious diet. Consider factors such as variety, nutrient density, and balance of food groups.
+Total Carbs: Estimate the total carbohydrate intake in grams.
+Healthy Meals: Count the number of meals that can be considered 'healthy'. A healthy meal should include a good balance of proteins, complex carbohydrates, healthy fats, and vegetables.
+Brief Commentary: In 1-2 sentences, provide an overall assessment of the diet, highlighting strengths and areas for improvement.
+
+Present the information in a JSON format with 'generalinfo', 'healthscore', 'healthymeals', and 'carbs' arrays. Do not include any other information, just provide the JSON data. Use general nutritional guidelines and avoid making extreme judgments based on this limited data set.
+The JSON structure should be as follows:
+{
+"generalinfo": ["Brief overall assessment"],
+"healthscore": [numerical score],
+"healthymeals": [number of healthy meals],
+"carbs": [total carbs in grams]
+ "protien" : [total protien in grams]
+  "fat" : [total fat in grams]
+}
+Ensure that the response is a valid JSON object with these exact keys and array values, and Do not use any markdown formatting in your response. even if the arrays contain only one element and When you use this in your JSON,`;
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const responseText = response.text();
+    console.log(responseText);
+    const parsedResponse = JSON.parse(responseText);
+    localStorage.setItem("mypersonalfoodreport", responseText);
+    setDesc(parsedResponse.generalinfo[0]);
+    setHealthScore(parsedResponse.healthscore[0]);
+    setHealthyMeals(parsedResponse.healthymeals[0]);
+    setCarbs(parsedResponse.carbs[0]);
+    localStorage.setItem("proteineaten", parsedResponse.protien[0]);
+    setProtien(parsedResponse.protien[0]);
+    setFat(parsedResponse.fat[0]);
+
+    // localStorage.setItem("lastReportGenerationReport", response.text());
+  }
+
+  async function generateCorbonFootprint() {
+    const food = localStorage.getItem("foodName");
+    const healthyFoods = [
+      // Fruits
+      "Apple",
+      "Banana",
+      "Orange",
+      "Grapes",
+      "Strawberry",
+      "Blueberry",
+      "Raspberry",
+      "Blackberry",
+      "Pineapple",
+      "Mango",
+      "Papaya",
+      "Kiwi",
+      "Peach",
+      "Plum",
+      "Nectarine",
+      "Apricot",
+      "Cherry",
+      "Watermelon",
+      "Cantaloupe",
+      "Honeydew",
+      "Pomegranate",
+      "Grapefruit",
+      "Lemon",
+      "Lime",
+      "Tangerine",
+      "Mandarin",
+      "Avocado",
+      "Fig",
+      "Date",
+      "Guava",
+      "Passion Fruit",
+      "Dragon Fruit",
+      "Starfruit",
+      "Persimmon",
+      "Lychee",
+      "Longan",
+      "Mulberry",
+      "Gooseberry",
+      "Currant",
+      "Jujube",
+      "Jackfruit",
+      "Durian",
+      "Salak",
+      "Cherimoya",
+      "Soursop",
+      "Ackee",
+      "Plantain",
+      "Prickly Pear",
+
+      // Indian Foods
+      "Paneer Tikka",
+      "Chana Masala",
+      "Dal Tadka",
+      "Vegetable Biryani",
+      "Palak Paneer",
+      "Aloo Gobi",
+      "Rajma",
+      "Bhindi Masala",
+      "Aloo Paratha",
+      "Dosa",
+      "Idli",
+      "Vada",
+      "Chappati",
+      "Butter Chicken",
+      "Chicken Curry",
+      "Rogan Josh",
+      "Biryani",
+      "Pulao",
+      "Lentil Soup",
+      "Khichdi",
+      "Pani Puri",
+      "Dhokla",
+      "Kachori",
+      "Tandoori Chicken",
+      "Fish Curry",
+      "Kebabs",
+
+      // Non-Vegetarian Foods
+      "Chicken Breast",
+      "Turkey Breast",
+      "Salmon",
+      "Tuna",
+      "Shrimp",
+      "Crab",
+      "Lobster",
+      "Beef Steak",
+      "Pork Tenderloin",
+      "Ground Turkey",
+      "Chicken Thighs",
+      "Chicken Wings",
+      "Duck",
+      "Quail",
+      "Lamb Chops",
+      "Eggs",
+      "Chicken Liver",
+      "Beef Liver",
+      "Pork Chops",
+      "Fish Fillet",
+      "Chicken Sausage",
+      "Cod",
+      "Sea Bass",
+      "Halibut",
+      "Octopus",
+      "Squid",
+    ];
+
+    const prompt = `Analyze the following items consumed by an individual:
+- Person's Food Consumed: ${food}
+- Idol's Food Consumed: ${healthyFoods}
+
+Compare the individual's food consumption with that of the idol's food choices. Assess how closely the person's food aligns with the healthy options consumed by the idol. Provide a comparison score in XP (experience points) based on this alignment and answer in JSON. 
+
+The JSON structure should be as follows:
+{
+"Individual's Diet": ["Brief overall assessment"],
+"Idol's Diet:": ["Brief overall assessment"],
+"quotes:": ["A quote for change"],
+"XP Score": [number based on comparison of both diets out of 100],
+"Recommended diet chart": ["Brief overall assessment"]
+}
+
+Please provide the answer using the following keys: "xp", "individual", "idol", "quotes", "recomm". Do not use any markdown formatting in your response.`;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const responseText = response.text();
+    console.log(responseText);
+    localStorage.setItem("scoreComparison", responseText);
+  }
   return (
     <>
       <div className="flex p-4 justify-between w-full">
         <img src={vitalogo} alt="logo" className="logoofvita" />
-        <div className="rounded-full">
-          <img
-            src={profilelogo}
-            alt="logo"
-            className="logoofvita rounded-full"
-          />
+        <div className="rounded-full bg-gray-900 w-10 h-10 flex justify-center items-center border-whit">
+          <p className="text-2xl text-gray-100">{avatar.slice(0, 1)}</p>
         </div>
       </div>
       <div className="flex justify-start items-center p-4">
@@ -110,15 +326,50 @@ function Home({}: Props) {
         <div className="flex flex-col gap-2 justify-between w-full customdiv my-4">
           <h2 className="text-md font-bold">Daily Food Score</h2>
 
-          <p className="text-md">
-            Based on your overview food Intake, your score is 8 and consider
-            good..
-          </p>
+          <p className="text-md">{desc}</p>
 
           <div className="badge">
-            <span className="badge-number">8</span>
+            <span className="badge-number">{healthScore}</span>
           </div>
         </div>
+        <div>
+          <h2 className="text-2xl font-bold my-4">Health Report</h2>
+          <Swiper spaceBetween={10} slidesPerView={2.5}>
+            <SwiperSlide>
+              <div className="flex flex-col gap-2 justify-between ml-2 p-4 border rounded-xl box0shad  w-90  my-4">
+                <h2 className="text-md font-bold">🍴 Healthy Meals</h2>
+                <p className="text-md font-bold text-lg text-gray-500 ">
+                  {healthyMeals} bowls
+                </p>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex flex-col gap-2 justify-between ml-2 p-4 border rounded-xl box0shad  w-90  my-4">
+                <h2 className="text-md font-bold">🧀 Carbs</h2>
+                <p className="text-md font-bold text-lg text-gray-500 ">
+                  Consumed {carbs}g{" "}
+                </p>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex flex-col gap-2 justify-between ml-2 p-4 border rounded-xl box0shad  w-90 my-4">
+                <h2 className="text-md font-bold">🍛 Protien</h2>
+                <p className="text-md font-bold text-lg text-gray-500 ">
+                  Consumed {protien}g{" "}
+                </p>
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="flex flex-col gap-2 justify-between  ml-2 p-4 border rounded-xl box0shad w-90  my-4">
+                <h2 className="text-md font-bold">🌭 Fat</h2>
+                <p className="text-md font-bold text-lg text-gray-500 ">
+                  Consumed {fat}g{" "}
+                </p>
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+
         <div className="flex flex-col gap-2 justify-between w-full customdiv my-4">
           <h2 className="text-md font-bold">Daily Corbon Budget</h2>
 

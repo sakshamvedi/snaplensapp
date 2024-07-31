@@ -157,7 +157,7 @@
   transform: scale(0.98);
 }
 
-.fixed {
+.fixedclass {
   top: 0px !important;
 }
 
@@ -247,6 +247,66 @@ video {
 .bg-custom-3-image:hover {
   scale: 1.2;
 }
-.h-ninty {
-  height: 90vh;
+
+.bg-color {
+  background-color: #f0f0f0;
+}
+
+.bg-abstract {
+  background-image: url("../assets/ham.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  height: 140px;
+}
+.take-padding {
+  padding-top: 170px;
+}
+
+.absvalue {
+  position: absolute;
+  top: 95px;
+  left: 20px;
+}
+
+.threedlook {
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  background-color: #171a1f;
+  font-family: cursive;
+  border: solid 3px white;
+}
+
+.btnpower {
+  overflow: hidden;
+  top: 115px;
+  border-radius: 20px;
+  display: flex;
+  gap: 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  right: 3px;
+}
+
+.mycustomheight {
+  height: 230px;
+  overflow: scroll;
+  margin-bottom: 10px;
+}
+
+.mycustomheight::-webkit-scrollbar {
+  display: none;
+}
+
+.box0shad {
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  height: 150px;
+}
+
+.customyellow {
+  background-color: #fede67;
+}
+
+.customgreen {
+  background-color: #b6f36a;
 }

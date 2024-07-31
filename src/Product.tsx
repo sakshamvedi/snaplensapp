@@ -47,17 +47,26 @@ import {
 import Webcam from "react-webcam";
 import { Button } from "./components/ui/button";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-const genAi = new GoogleGenerativeAI("text");
+const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 import somegood from "./assets/leaf.png";
-import qrcode from "./assets/QhBk2.png";
+import loader from "./assets/pokebal.gif";
 import { Badge } from "@/components/ui/badge";
 
 type Props = {};
 
 function Product({}: Props) {
   const [facemode, setFaceMode] = useState("environment");
+
+  function storeInDb(product) {
+    if (typeof localStorage !== "undefined") {
+      let arr = JSON.parse(localStorage.getItem("product") || "[]");
+      arr.push(product);
+      localStorage.setItem("product", JSON.stringify(arr));
+    }
+  }
+
   function switchCamera() {
     setFaceMode(facemode === "user" ? "environment" : "user");
   }
@@ -71,6 +80,7 @@ function Product({}: Props) {
   const webcamRef = useRef<Webcam>(null);
   const [foodData, setFoodData] = React.useState("");
   const [isScanning, setIsScanning] = React.useState(true);
+  const [loading, setLoading] = React.useState(true);
   const [foodName, setFoodName] = useState("");
   const [dietaryRecommendations, setDietaryRecommendations] = useState([]);
   const [healthImpact, setHealthImpact] = useState([]);
@@ -100,6 +110,7 @@ function Product({}: Props) {
   }
 
   async function generateCorbonFootprint() {
+    setLoading(true);
     const prompt = `
 Certainly! Here’s a converted prompt for analyzing the carbon emissions of a product and how to dispose of it in an environmentally friendly manner:
 
@@ -127,7 +138,9 @@ Format the response as JSON with "name", "carbonEmissionFacts", "footprintRecomm
     try {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
+      setLoading(false);
       setFoodName(parsedResponse.name);
+      storeInDb(parsedResponse.name);
       setDietaryRecommendations(parsedResponse.carbonEmissionFacts);
       setHealthImpact(parsedResponse.footprintRecommendations);
       setMicronutrients(parsedResponse.environmentalImpact);
@@ -198,65 +211,79 @@ Format the response as JSON with "name", "carbonEmissionFacts", "footprintRecomm
             Scan Captured Item
           </DrawerTrigger>
           <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Carbon Emission Report with ❤️</DrawerTitle>
-              <DrawerDescription>
-                <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
-                  Product : {foodName} <p>Score : {score}</p>
-                </p>
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4 overflow-y-auto h-full">
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Carbon Emission Facts
-                </h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {micronutrients}
-                </ul>
-              </section>
+            {loading ? (
+              <>
+                {" "}
+                <DrawerHeader>
+                  <DrawerTitle>Analyzing....</DrawerTitle>
+                  <img src={loader}></img>
+                </DrawerHeader>
+              </>
+            ) : (
+              <>
+                <DrawerHeader>
+                  <DrawerTitle>Carbon Emission Report with ❤️</DrawerTitle>
+                  <DrawerDescription>
+                    <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
+                      Product : {foodName} <p>Score : {score}</p>
+                    </p>
+                  </DrawerDescription>
+                </DrawerHeader>
+                <div className="p-4 overflow-y-auto h-full">
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Carbon Emission Facts
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {micronutrients}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Foot Print Recommendations
-                </h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {nutritionalFacts.map((fact, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-4 font-bold bg-indigo-100 p-2 rounded-md"
-                    >
-                      <p>{index + 1}.</p> {fact.method}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Foot Print Recommendations
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {nutritionalFacts.map((fact, index) => (
+                        <li
+                          key={index}
+                          className="flex gap-4 font-bold bg-indigo-100 p-2 rounded-md"
+                        >
+                          <p>{index + 1}.</p> {fact.method}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Environmental Impact
-                </h3>
-                <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
-                  {dietaryRecommendations.map((recommendation, index) => (
-                    <li
-                      key={index}
-                      className="flex gap-4 font-bold bg-green-200 p-2 rounded-md"
-                    >
-                      <p>{index + 1}.</p> {recommendation}
-                    </li>
-                  ))}
-                </ul>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Environmental Impact
+                    </h3>
+                    <ul className="flex flex-col gap-2 font-bold  p-2 rounded-md">
+                      {dietaryRecommendations.map((recommendation, index) => (
+                        <li
+                          key={index}
+                          className="flex gap-4 font-bold bg-green-200 p-2 rounded-md"
+                        >
+                          <p>{index + 1}.</p> {recommendation}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
 
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">
-                  Disposal Instructions
-                </h3>
-                <p className="bg-green-200 p-2 rounded-md">{healthImpact}</p>
-              </section>
+                  <section className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Disposal Instructions
+                    </h3>
+                    <p className="bg-green-200 p-2 rounded-md">
+                      {healthImpact}
+                    </p>
+                  </section>
 
-              <div className="my-20"></div>
-            </div>
+                  <div className="my-20"></div>
+                </div>
+              </>
+            )}
 
             <DrawerFooter>
               <DrawerClose>

@@ -1,5 +1,6 @@
 import {
   ChefHatIcon,
+  CircleDashedIcon,
   Home,
   MessageCircleIcon,
   PowerOffIcon,
@@ -23,8 +24,8 @@ function Footer({}: Props) {
           <Link to="/scan"> Scan</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
-          <MessageCircleIcon />
-          <Link to="/chat"> Chat</Link>
+          <CircleDashedIcon />
+          <Link to="/chat"> Feed</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
           <User2Icon />

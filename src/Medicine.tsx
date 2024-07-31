@@ -48,7 +48,7 @@ import {
 import Webcam from "react-webcam";
 import { Button } from "./components/ui/button";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-const genAi = new GoogleGenerativeAI("apikey");
+const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 import somegood from "./assets/meds.png";
@@ -61,6 +61,14 @@ function Medicine({}: Props) {
   const [facemode, setFaceMode] = useState("environment");
   function switchCamera() {
     setFaceMode(facemode === "user" ? "environment" : "user");
+  }
+
+  function storeInDb(medicineName: string) {
+    if (typeof localStorage !== "undefined") {
+      let arr = JSON.parse(localStorage.getItem("medicineName") || "[]");
+      arr.push(medicineName);
+      localStorage.setItem("medicineName", JSON.stringify(arr));
+    }
   }
   const videoConstraints = {
     width: 1280,
@@ -148,6 +156,7 @@ function Medicine({}: Props) {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
       setFoodName(parsedResponse.name);
+      storeInDb(parsedResponse.name);
       setDietaryRecommendations(parsedResponse.medicinalFacts);
       setHealthImpact(parsedResponse.usageRecommendations);
       setMicronutrients(parsedResponse.activeIngredients);
