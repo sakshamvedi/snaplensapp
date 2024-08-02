@@ -83,6 +83,11 @@ function Home({}: Props) {
       }
     }
   }, []);
+
+  function refreshReport() {
+    generatePersonReport();
+    generateCorbonFootprint();
+  }
   async function generatePersonReport() {
     const foodheeaten = localStorage.getItem("foodName");
     const medicine = localStorage.getItem("medicineName");
@@ -121,8 +126,6 @@ Ensure that the response is a valid JSON object with these exact keys and array 
     localStorage.setItem("proteineaten", parsedResponse.protien[0]);
     setProtien(parsedResponse.protien[0]);
     setFat(parsedResponse.fat[0]);
-
-    // localStorage.setItem("lastReportGenerationReport", response.text());
   }
 
   async function generateCorbonFootprint() {
@@ -274,13 +277,13 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
       </div>
       <div className="p-4 flex justify-between w-full">
         <p className="text-3xl font-bold">Overview</p>
-        <Button variant={"outline"}>
+        <Button variant={"outline"} onClick={refreshReport}>
           {" "}
           <RocketIcon size={14} />{" "}
           <span>
             <pre> </pre>
           </span>
-          All Data
+          Refresh Report
         </Button>
       </div>
       <div className="p-4 flex flex-col gap-2">

@@ -10,7 +10,9 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import {
+  CircleDotDashed,
   FerrisWheelIcon,
+  HeartHandshake,
   LucideMessageCircle,
   LucideRocket,
   MessageCircleIcon,
@@ -19,6 +21,16 @@ import {
   MessageSquareDashedIcon,
   SendIcon,
 } from "lucide-react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { Button } from "./components/ui/button";
 import { storage, db } from "./firebase.config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -231,7 +243,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
         <Tabs defaultValue="feed">
           <TabsList className="w-full">
             <TabsTrigger value="feed" className="w-1/2">
-              Feed
+              <CircleDotDashed />
             </TabsTrigger>
             <TabsTrigger value="idols" className="w-1/2 bg">
               <MessageSquareDashed />
@@ -239,17 +251,39 @@ Only bring up past conversations if ${name} specifically asks about something fr
           </TabsList>
           <TabsContent value="feed">
             <div className="mb-4">
-              <input type="file" onChange={handleFileChange} accept="image/*" />
-              <input
-                type="text"
-                value={caption}
-                onChange={handleCaptionChange}
-                placeholder="Enter caption"
-                className="border p-2 ml-2"
-              />
-              <Button onClick={handleUpload} disabled={uploading}>
-                {uploading ? "Uploading..." : "Upload"}
-              </Button>
+              <div className="flex flex-col gap-4 mt-7 ">
+                <div className="flex flex-col jutsify-start gap-4 p-4 rounded-2xl boxshadowUi">
+                  <img
+                    src="https://cdn.dribbble.com/userupload/4442920/file/original-14ccf672eeb86087a56adf3d08b76093.png?resize=1200x900"
+                    className="rounded-2xl imageheight"
+                  ></img>
+                  <span className="flex flex-col gap-2">
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <Button variant="outline">
+                          {" "}
+                          More content goes here.
+                        </Button>
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <div className="mx-auto w-full max-w-sm">
+                          <DrawerHeader>
+                            <DrawerTitle>Pizza Party</DrawerTitle>
+                          </DrawerHeader>
+                          <div className="p-4 pb-0">
+                            More content goes here.
+                          </div>
+                          <DrawerFooter>
+                            <DrawerClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                          </DrawerFooter>
+                        </div>
+                      </DrawerContent>
+                    </Drawer>
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="space-y-4">
               {feedPosts.map((post) => (

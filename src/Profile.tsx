@@ -20,6 +20,7 @@ import {
   MapPin,
   PanelTopClose,
   PowerOffIcon,
+  RefreshCcwDotIcon,
   ScanFace,
   ScanFaceIcon,
   SpadeIcon,
@@ -42,6 +43,7 @@ function Profile({}: Props) {
   const [prodDesc, setProdDesc] = React.useState("");
   const [FoodDesc, setFoodDesc] = React.useState("");
   const [watchId, setWatchId] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
   const [productScan, setProductScan] = React.useState(["hey"]);
   const [FriendScan, setFriendScan] = React.useState([
     "Whey Protein",
@@ -204,6 +206,14 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
     setFoodDesc(responseText);
     localStorage.setItem("lastFoodsReport", response.text());
   }
+
+  function refreshFeed() {
+    setLoading(true);
+    generatePersonReport();
+    generatePersonProductReport();
+    generatePersonHealthReport();
+    setLoading(false);
+  }
   return (
     <div>
       <div className="w-full take-padding">
@@ -221,12 +231,14 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
           {avatar.slice(1, avatar.length).toLowerCase()}
         </div>
         <div className="flex gap-2">
-          <h1 className="text-xs ml-4 justify-center items-center flex mt-2 font-bold rounded-xl w-fit p-2">
-            <div>Helath-Streak : 0 days</div>
-          </h1>
-          <h1 className="text-xs flex ml-4 mt-2 font-bold rounded-xl w-fit p-2">
-            Green-Streak : 0 days
-          </h1>
+          <Button
+            variant="outline"
+            className=" ml-2 mt-2"
+            onClick={refreshFeed}
+          >
+            <RefreshCcwDotIcon color="gray" className="mr-2" />{" "}
+            {loading ? <>Refresh About</> : <>Refreshing</>}
+          </Button>
         </div>
 
         <Swiper

@@ -179,6 +179,7 @@ video {
   width: 90%;
   margin: 0 auto;
   left: 5%;
+  background: white;
 }
 .fixedchatsectionforchat {
   height: 350px;
@@ -396,4 +397,16 @@ video {
 .custom-chat {
   background: #3b73fc;
   color: white;
+  width: 90%;
+  margin-left: 10%;
+  border-bottom-left-radius: 0px;
+}
+
+.imageheight {
+  height: 200px;
+  object-fit: cover;
+}
+
+.boxshadowUi {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
