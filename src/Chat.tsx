@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,14 +9,43 @@ import {
 } from "@/components/ui/dialog";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import charss from "./assets/charss.jpg";
-import { FerrisWheelIcon, LucideRocket } from "lucide-react";
+import {
+  FerrisWheelIcon,
+  LucideMessageCircle,
+  LucideRocket,
+  MessageCircleIcon,
+  MessageSquare,
+  MessageSquareDashed,
+  MessageSquareDashedIcon,
+  SendIcon,
+} from "lucide-react";
 import { Button } from "./components/ui/button";
 import { storage, db } from "./firebase.config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
+const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Product from "./Product";
+import { LucideMessageSquareDashed } from "lucide-react";
 
 type Props = {};
+
+interface FeedPost {
+  id: string;
+  caption: string;
+  imageUrl: string;
+  createdAt: Date;
+}
 
 function Chat({}: Props) {
   const [xpscore, setXpScore] = useState<string>("");
@@ -26,6 +55,38 @@ function Chat({}: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
+  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+  const [previousChats, setPreviousChats] = useState<string[]>([]);
+  const [userInput, setuserInput] = useState<string>("");
+  const [loading, setloading] = useState(false);
+  useEffect(() => {
+    getLocalData();
+    // fetchFeedPosts();
+  }, []);
+
+  // Make sure to define the ref at the top of your component
+  const chatContainerRef = useRef(null);
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [previousChats, loading]);
+
+  const getLocalData = () => {
+    const responseText = localStorage.getItem("scoreComparison");
+    if (responseText) {
+      try {
+        const parsedResponse = JSON.parse(responseText);
+        setXpScore(parsedResponse.xp || "");
+        setIndv(parsedResponse.individual || "");
+        setRecom(parsedResponse.recomm || "");
+        setQuote(parsedResponse.quotes || "");
+      } catch (error) {
+        console.error("Error parsing local data: ", error);
+      }
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -46,15 +107,13 @@ function Chat({}: Props) {
     setUploading(true);
 
     try {
-      // Upload file to Firebase Storage
       const storageRef = ref(storage, `photos/${file.name}`);
       await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(storageRef);
 
-      // Add metadata to Firestore
       await addDoc(collection(db, "photos"), {
         caption: caption,
-        url: downloadURL,
+        imageUrl: downloadURL,
         createdAt: new Date(),
       });
 
@@ -69,24 +128,54 @@ function Chat({}: Props) {
     }
   };
 
-  useEffect(() => {
-    getLocalData();
-  }, []);
+  const fetchFeedPosts = () => {
+    const q = query(
+      collection(db, "photos"),
+      orderBy("createdAt", "desc"),
+      limit(20)
+    );
 
-  const getLocalData = () => {
-    const responseText = localStorage.getItem("scoreComparison");
-    if (responseText) {
-      try {
-        const parsedResponse = JSON.parse(responseText);
-        setXpScore(parsedResponse.xp || "");
-        setIndv(parsedResponse.individual || "");
-        setRecom(parsedResponse.recomm || "");
-        setQuote(parsedResponse.quotes || "");
-      } catch (error) {
-        console.error("Error parsing local data: ", error);
-      }
-    }
+    onSnapshot(q, (snapshot) => {
+      const posts: FeedPost[] = [];
+      snapshot.forEach((doc) => {
+        posts.push({ id: doc.id, ...doc.data() } as FeedPost);
+      });
+      setFeedPosts(posts);
+    });
   };
+
+  async function returnansofchat(userInput: string) {
+    setloading(true);
+    const foodheeaten = localStorage.getItem("foodName");
+    const medicine = localStorage.getItem("medicineName");
+    const product = localStorage.getItem("product");
+    const gender = localStorage.getItem("gender");
+    const name = localStorage.getItem("name");
+    const prompt = `
+You are an AI assistant acting as ${name}'s close friend. You know everything about their recent lifestyle, including what they've eaten, products they've used, and medications they've taken. Use this knowledge naturally in your responses.
+
+You have access to recent interactions: ${previousChats}
+
+Speak in Hinglish (a mix of Hindi and English) in a casual, friendly tone.
+
+Detailed info about ${name}'s recent habits:
+- All food consumed: ${foodheeaten}
+- All products used: ${product}
+- All medications taken: ${medicine}
+
+${name} just asked: "${userInput}"
+
+Respond to their question as a caring friend who's fully aware of their recent lifestyle. Use your knowledge of their habits if it's relevant to the current question do not mix previour interaction with current one if not required , but don't force this information if it's not necessary. Focus on answering their current question directly.
+
+Only bring up past conversations if ${name} specifically asks about something from the past or if it's crucial to answer their current question.
+`;
+    const result = await model.generateContent([prompt]);
+    const response = result.response;
+    const responseText = response.text();
+    setloading(false);
+    setuserInput("");
+    setPreviousChats([...previousChats, responseText]);
+  }
 
   return (
     <div>
@@ -137,17 +226,90 @@ function Chat({}: Props) {
           </SwiperSlide>
         </Swiper>
       </div>
-      <div>
-        <input type="file" onChange={handleFileChange} accept="image/*" />
-        <input
-          type="text"
-          value={caption}
-          onChange={handleCaptionChange}
-          placeholder="Enter a caption"
-        />
-        <button onClick={handleUpload} disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload Photo"}
-        </button>
+      <h1 className="ml-3 font-bold text-2xl">Feed</h1>
+      <div className="ml-3 mt-4 mr-3">
+        <Tabs defaultValue="feed">
+          <TabsList className="w-full">
+            <TabsTrigger value="feed" className="w-1/2">
+              Feed
+            </TabsTrigger>
+            <TabsTrigger value="idols" className="w-1/2 bg">
+              <MessageSquareDashed />
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="feed">
+            <div className="mb-4">
+              <input type="file" onChange={handleFileChange} accept="image/*" />
+              <input
+                type="text"
+                value={caption}
+                onChange={handleCaptionChange}
+                placeholder="Enter caption"
+                className="border p-2 ml-2"
+              />
+              <Button onClick={handleUpload} disabled={uploading}>
+                {uploading ? "Uploading..." : "Upload"}
+              </Button>
+            </div>
+            <div className="space-y-4">
+              {feedPosts.map((post) => (
+                <div key={post.id} className="border p-4 rounded-lg">
+                  <img
+                    src={post.imageUrl}
+                    alt="Post"
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                  <p className="mt-2 font-bold">{post.caption}</p>
+                  <p className="text-sm text-gray-500">
+                    {/* {post.createdAt.toDate().toLocaleString()} */}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="idols">
+            <div className="flex flex-col">
+              <div className="flex flex-col">
+                <p className="font-bold text-xl mt-2 ml-3 mb-2">Chats</p>
+                <div
+                  className="flex flex-col fixedchatsectionforchat overflow-y-auto"
+                  ref={chatContainerRef}
+                >
+                  {previousChats.map((chat, index) => (
+                    <div
+                      key={index}
+                      className="border p-4 rounded-xl mt-2 custom-chat"
+                    >
+                      <p>{chat}</p>
+                    </div>
+                  ))}
+                  {loading && (
+                    <div className="border p-4 rounded-lg mt-2">
+                      <p className="loader  ml-4"></p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col mt-4 fixedchatsection">
+                <div className="flex gap-2  justify-center items-center mt-2">
+                  <input
+                    type="text"
+                    placeholder="Chat Here..."
+                    value={userInput}
+                    className="border p-2 ml-2 w-full"
+                    onChange={(e) => setuserInput(e.target.value)}
+                  />
+                  <Button
+                    className="bg-black-800 border hover:bg-blue-100"
+                    onClick={() => returnansofchat(userInput)}
+                  >
+                    <SendIcon color="black" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
