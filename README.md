@@ -19,7 +19,7 @@ SnapLens is an innovative application designed to enhance personal well-being an
 ### 3. Medicine Scanning
 - *Functionality*: Scan barcodes or images of medicines.
 - *Output*: Access comprehensive details about the medicine, including its purpose, usage instructions, dosage, potential side effects, and safety warnings.
-- *Benefits*: Ensures proper medication usage, reduces the risk of misuse, and enhances patient safety and health outcomes.
+- *Benefits*: Ensures proper medication usage, reduces the risk of misuse, and enhances pateint safety and health outcomes.
 
 ## Implementation Plan
 
