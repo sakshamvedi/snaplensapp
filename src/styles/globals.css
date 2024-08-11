@@ -397,8 +397,9 @@ video {
 .custom-chat {
   background: #3b73fc;
   color: white;
-  width: 90%;
-  margin-left: 10%;
+
+  text-align: left;
+  margin-right: 10%;
   border-bottom-left-radius: 0px;
 }
 
@@ -409,4 +410,24 @@ video {
 
 .boxshadowUi {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.user-chat {
+  background: green;
+  color: white;
+  width: 90%;
+  text-align: right;
+  margin-left: 10%;
+  border-bottom-left-radius: 0px;
+}
+
+.bg-violet-new {
+  background-color: #7678ed;
+  color: white;
+  font-weight: 800;
+}
+.bg-violet-old {
+  background-color: #eeeef8;
+  color: black;
+  font-weight: 800;
 }

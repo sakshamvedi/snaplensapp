@@ -73,6 +73,7 @@ function Chat({}: Props) {
   const [uploading, setUploading] = useState<boolean>(false);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [previousChats, setPreviousChats] = useState<string[]>([]);
+  const [userChats, setUserChat] = useState<string[]>([]);
   const [userInput, setuserInput] = useState<string>("");
   const [loading, setloading] = useState(false);
   useEffect(() => {
@@ -188,6 +189,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
     const result = await model.generateContent([prompt]);
     const response = result.response;
     const responseText = response.text();
+    setUserChat([...userChats, userInput]);
     setloading(false);
     setuserInput("");
     setPreviousChats([...previousChats, responseText]);
@@ -393,12 +395,21 @@ Only bring up past conversations if ${name} specifically asks about something fr
                   ref={chatContainerRef}
                 >
                   {previousChats.map((chat, index) => (
-                    <div
-                      key={index}
-                      className="border p-4 rounded-xl mt-2 custom-chat"
-                    >
-                      <p>{chat}</p>
-                    </div>
+                    <>
+                      <div key={index} className="flex gap-10 s">
+                        <div
+                          key={index}
+                          className="bg-violet-old mt-10 p-4 rounded-xl relative top-7"
+                        >
+                          <p>{chat}</p>
+                        </div>
+                        <div key={index}>
+                          <div className="bg-violet-new p-4 mt-10 rounded-3xl">
+                            {userChats[index]}
+                          </div>
+                        </div>
+                      </div>
+                    </>
                   ))}
                   {loading && (
                     <div className="border p-4 rounded-lg mt-2">
