@@ -4,6 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { signOut } from "firebase/auth"
+import {signInWithEmailAndPassword} from "firebase/auth"
 
 const firebaseConfig = {
     apiKey: "AIzaSyBjH0fllj39aNxZhiUQxlElWmUDOGmt5LE",

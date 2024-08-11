@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import vitalogo from "./assets/vita.jpg";
+import vitalogo from "./assets/vita.png";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
