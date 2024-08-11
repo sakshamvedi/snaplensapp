@@ -35,6 +35,10 @@ import { Button } from "./components/ui/button";
 import { storage, db } from "./firebase.config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import imageCoffee from "./assets/coffee.jpg";
+import imageMeds from "./assets/medscc.png";
+import imageMan from "./assets/micone.jpg";
+import Cardss from "./assets/card.jpg";
 const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -69,6 +73,7 @@ function Chat({}: Props) {
   const [uploading, setUploading] = useState<boolean>(false);
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [previousChats, setPreviousChats] = useState<string[]>([]);
+  const [userChats, setUserChat] = useState<string[]>([]);
   const [userInput, setuserInput] = useState<string>("");
   const [loading, setloading] = useState(false);
   useEffect(() => {
@@ -184,6 +189,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
     const result = await model.generateContent([prompt]);
     const response = result.response;
     const responseText = response.text();
+    setUserChat([...userChats, userInput]);
     setloading(false);
     setuserInput("");
     setPreviousChats([...previousChats, responseText]);
@@ -252,9 +258,10 @@ Only bring up past conversations if ${name} specifically asks about something fr
           <TabsContent value="feed">
             <div className="mb-4">
               <div className="flex flex-col gap-4 mt-7 ">
+                <img src={imageMeds} className="rounded-2xl mb-10"></img>
                 <div className="flex flex-col jutsify-start gap-4 p-4 rounded-2xl boxshadowUi">
                   <img
-                    src="https://cdn.dribbble.com/userupload/4442920/file/original-14ccf672eeb86087a56adf3d08b76093.png?resize=1200x900"
+                    src={imageCoffee}
                     className="rounded-2xl imageheight"
                   ></img>
                   <span className="flex flex-col gap-2">
@@ -262,17 +269,95 @@ Only bring up past conversations if ${name} specifically asks about something fr
                       <DrawerTrigger asChild>
                         <Button variant="outline">
                           {" "}
-                          More content goes here.
+                          See What Inside the Coffee at Microsoft 🌟
                         </Button>
                       </DrawerTrigger>
                       <DrawerContent>
                         <div className="mx-auto w-full max-w-sm">
                           <DrawerHeader>
-                            <DrawerTitle>Pizza Party</DrawerTitle>
+                            <DrawerTitle>Coffee Mania</DrawerTitle>
+                            <DrawerDescription>
+                              Just Finshed few gulp of caffiene Let's See ....
+                            </DrawerDescription>
                           </DrawerHeader>
                           <div className="p-4 pb-0">
-                            More content goes here.
+                            <p className="font-bold">Caffeine</p>
+                            <p>
+                              Caffeine is a central nervous system stimulant of
+                              the methylxanthine class. It is the world's most
+                              widely consumed psychoactive drug. Unlike many
+                              other psychoactive substances, it is legal and
+                              unregulated in nearly all parts of the world.
+                            </p>
                           </div>
+                          <DrawerFooter>
+                            <DrawerClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                          </DrawerFooter>
+                        </div>
+                      </DrawerContent>
+                    </Drawer>
+                  </span>
+                </div>
+                <div className="flex flex-col jutsify-start gap-4 p-4 rounded-2xl boxshadowUi">
+                  <img src={imageMan} className="rounded-2xl imageheight"></img>
+                  <span className="flex flex-col gap-2">
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <Button variant="outline"> Hee Hee Hee 🌟</Button>
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <div className="mx-auto w-full max-w-sm">
+                          <DrawerHeader>
+                            <DrawerTitle>Capacitors .....</DrawerTitle>
+                            <DrawerDescription></DrawerDescription>
+                          </DrawerHeader>
+                          <div className="p-4 pb-0">
+                            <p className="font-bold">Caffeine</p>
+                            <p>
+                              Caffeine is a central nervous system stimulant of
+                              the methylxanthine class. It is the world's most
+                              widely consumed psychoactive drug. Unlike many
+                              other psychoactive substances, it is legal and
+                              unregulated in nearly all parts of the world.
+                            </p>
+                          </div>
+
+                          <div className="mt-2 rounded-2xl"></div>
+                          <DrawerFooter>
+                            <DrawerClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DrawerClose>
+                          </DrawerFooter>
+                        </div>
+                      </DrawerContent>
+                    </Drawer>
+                  </span>
+                </div>
+                <div className="flex flex-col jutsify-start gap-4 p-4 rounded-2xl boxshadowUi">
+                  <img src={Cardss} className="rounded-2xl imageheight"></img>
+                  <span className="flex flex-col gap-2">
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <Button variant="outline">
+                          {" "}
+                          okay !! lets see what it contains🌟
+                        </Button>
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <div className="mx-auto w-full max-w-sm">
+                          <DrawerHeader>
+                            <DrawerTitle>OX day Card...</DrawerTitle>
+                            <DrawerDescription></DrawerDescription>
+                          </DrawerHeader>
+                          Carbon Emission Facts The overall environmental impact
+                          of a plastic card like this is moderate. The card's
+                          relatively small size and limited materials contribute
+                          to a lower carbon footprint compared to larger
+                          products. However, the production and disposal
+                          processes still have environmental implications.
+                          <div className="mt-2 rounded-2xl"></div>
                           <DrawerFooter>
                             <DrawerClose asChild>
                               <Button variant="outline">Cancel</Button>
@@ -310,12 +395,21 @@ Only bring up past conversations if ${name} specifically asks about something fr
                   ref={chatContainerRef}
                 >
                   {previousChats.map((chat, index) => (
-                    <div
-                      key={index}
-                      className="border p-4 rounded-xl mt-2 custom-chat"
-                    >
-                      <p>{chat}</p>
-                    </div>
+                    <>
+                      <div key={index} className="flex gap-10 s">
+                        <div
+                          key={index}
+                          className="bg-violet-old mt-10 p-4 rounded-xl relative top-7"
+                        >
+                          <p>{chat}</p>
+                        </div>
+                        <div key={index}>
+                          <div className="bg-violet-new p-4 mt-10 rounded-3xl">
+                            {userChats[index]}
+                          </div>
+                        </div>
+                      </div>
+                    </>
                   ))}
                   {loading && (
                     <div className="border p-4 rounded-lg mt-2">
