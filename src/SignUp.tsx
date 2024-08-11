@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import hello from "./assets/running.gif";
+import hello from "./assets/mailss.png";
+import { FcGoogle } from "react-icons/fc";
 import { Button } from "./components/ui/button";
-import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "./firebase.config";
 import { useNavigate } from "react-router-dom";
+import { LogInIcon } from "lucide-react";
 
 const SignUp: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
@@ -31,9 +37,8 @@ const SignUp: React.FC = () => {
         localStorage.setItem("name", name || "");
         localStorage.setItem("gender", selectedGender || "");
         localStorage.setItem("email", user.email || "");
-        
-        // Redirect to home page
-        navigate('/');
+
+        navigate("/home");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -61,7 +66,7 @@ const SignUp: React.FC = () => {
         localStorage.setItem("photoURL", user.photoURL || "");
 
         // Redirect to home page
-        navigate('/');
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -79,12 +84,24 @@ const SignUp: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center p-4 w-full">
       <img src={hello} alt="Welcome" />
-      <div className="heading text-2xl font-bold">Hey !!! Welcome 👏</div>
-      <div className="flex flex-col items-center p-4 my-20 w-full">
+      <div className="heading text-2xl font-bold">Hey !!! Let's Onboard </div>
+
+      <Button
+        className="w-fit my-7"
+        variant="outline"
+        onClick={signInWithGoogle}
+      >
+        <FcGoogle size={25} className="mr-4 4" />
+        <p className="font-bold ">Sign up with Google</p>
+      </Button>
+      <div className=" font-bold text-green-900 bg-green-200  p-2 rounded-xl">
+        or
+      </div>
+      <div className="flex flex-col items-center p-4 my-4 w-full border rounded-2xl ">
         <label className="text-start font-bold w-full">Your Good Name :)</label>
         <Input
           type="text"
-          placeholder=""
+          placeholder="What should we call you?"
           required
           className="my-4 bg-gray-100 rounded-2xl"
           onInput={(e) => setName(e.currentTarget.value)}
@@ -93,7 +110,7 @@ const SignUp: React.FC = () => {
         <label className="text-start font-bold w-full">Email</label>
         <Input
           type="email"
-          placeholder="Email"
+          placeholder="Your Email"
           required
           className="my-4 bg-gray-100 rounded-2xl"
           onInput={(e) => setEmail(e.currentTarget.value)}
@@ -102,13 +119,15 @@ const SignUp: React.FC = () => {
         <label className="text-start font-bold w-full">Password</label>
         <Input
           type="password"
-          placeholder="Password"
+          placeholder="Password should be more than 6 characters"
           required
           className="my-4 bg-gray-100 rounded-2xl"
           onInput={(e) => setPassword(e.currentTarget.value)}
         />
 
-        <label className="text-start font-bold w-full mt-10">Your Gender 😊</label>
+        <label className="text-start font-bold w-full mt-10">
+          Your Gender 😊
+        </label>
         <div className="flex flex-row items-center justify-start my-4 gap-4">
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
@@ -123,13 +142,16 @@ const SignUp: React.FC = () => {
           ))}
         </div>
 
-        <Button className="w-full my-10" onClick={signingUp}>
-          Sign Up
-        </Button>
-        <div className="my-4">or</div>
-
-        <Button className="w-full my-2" onClick={signInWithGoogle}>
-          Sign up with Google
+        <div className="flex w-full justify-center items-center gap-4">
+          <Button className="w-full my-2" onClick={signingUp}>
+            Sign Up
+          </Button>
+        </div>
+      </div>
+      <div className="my-2 flex justify-center items-center font-bold">
+        <p className="mr-2">New user...? </p>
+        <Button variant="outline" onClick={() => navigate("/signup")}>
+          Proceed to Sign Up
         </Button>
       </div>
     </div>

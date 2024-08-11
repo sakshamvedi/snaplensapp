@@ -175,15 +175,20 @@ video {
 
 .fixedchatsection {
   position: fixed;
-  bottom: 100px;
+  bottom: 10px;
   width: 90%;
   margin: 0 auto;
   left: 5%;
+  border-bottom-right-radius: 40px;
   background: white;
 }
 .fixedchatsectionforchat {
-  height: 350px;
+  position: fixed;
+
+  height: 800px;
+  width: 90%;
   overflow: scroll;
+  padding-bottom: 100px;
 }
 
 .fixedchatsectionforchat::-webkit-scrollbar {
@@ -425,9 +430,12 @@ video {
   background-color: #7678ed;
   color: white;
   font-weight: 800;
+  float: right;
+  margin-bottom: 10px;
 }
 .bg-violet-old {
   background-color: #eeeef8;
   color: black;
   font-weight: 800;
+  width: 90%;
 }

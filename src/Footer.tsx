@@ -24,8 +24,8 @@ function Footer({}: Props) {
           <Link to="/scan"> Scan</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
-          <CircleDashedIcon />
-          <Link to="/chat"> Feed</Link>
+          <MessageCircleIcon />
+          <Link to="/chat"> Chat</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
           <User2Icon />

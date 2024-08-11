@@ -29,8 +29,9 @@ function App() {
             path="/"
             element={login ? [<Home />, <Footer />] : [<SignIn />]}
           />
-          <Route path="/signup" element={<SignUp/>} />
-          <Route path="/chat" element={[<Footer />, <Chat />]} />
+          <Route path="/home" element={[<Home />, <Footer />]} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/chat" element={[<Chat />]} />
           <Route path="/scan" element={[<Footer />, <Scan />]} />
           <Route path="/profile" element={[<Footer />, <Profile />]} />
           <Route path="/products" element={[<Footer />, <Product />]} />

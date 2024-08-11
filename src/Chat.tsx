@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Link } from "react-router-dom";
 import {
   CircleDotDashed,
   FerrisWheelIcon,
@@ -38,7 +39,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import imageCoffee from "./assets/coffee.jpg";
 import imageMeds from "./assets/medscc.png";
 import imageMan from "./assets/micone.jpg";
-import Cardss from "./assets/card.jpg";
+import snappyy from "./assets/tinkuu.png";
 const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -53,6 +54,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Product from "./Product";
 import { LucideMessageSquareDashed } from "lucide-react";
+import { MoveLeftIcon } from "lucide-react";
 
 type Props = {};
 
@@ -76,6 +78,7 @@ function Chat({}: Props) {
   const [userChats, setUserChat] = useState<string[]>([]);
   const [userInput, setuserInput] = useState<string>("");
   const [loading, setloading] = useState(false);
+  const [background, setBackground] = useState(true);
   useEffect(() => {
     getLocalData();
     // fetchFeedPosts();
@@ -163,6 +166,7 @@ function Chat({}: Props) {
 
   async function returnansofchat(userInput: string) {
     setloading(true);
+    setBackground(false);
     const foodheeaten = localStorage.getItem("foodName");
     const medicine = localStorage.getItem("medicineName");
     const product = localStorage.getItem("product");
@@ -197,7 +201,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
 
   return (
     <div>
-      <div className="mt-5 p-4">
+      {/* <div className="mt-5 p-4">
         <Swiper spaceBetween={10} slidesPerView={1.1}>
           <SwiperSlide>
             <div className="flex flex-col customyellow p-4 rounded-3xl">
@@ -243,9 +247,14 @@ Only bring up past conversations if ${name} specifically asks about something fr
             </div>
           </SwiperSlide>
         </Swiper>
+      </div> */}
+      <div className="container p-4 flex justify-between">
+        <Link to="/">
+          <MoveLeftIcon />
+        </Link>
+        <h1 className="text-xl font-extrabold">Chats</h1>
       </div>
-      <h1 className="ml-3 font-bold text-2xl">Feed</h1>
-      <div className="ml-3 mt-4 mr-3">
+      {/* <div className="ml-3 mt-4 mr-3">
         <Tabs defaultValue="feed">
           <TabsList className="w-full">
             <TabsTrigger value="feed" className="w-1/2">
@@ -381,32 +390,47 @@ Only bring up past conversations if ${name} specifically asks about something fr
                   <p className="mt-2 font-bold">{post.caption}</p>
                   <p className="text-sm text-gray-500">
                     {/* {post.createdAt.toDate().toLocaleString()} */}
-                  </p>
+      {/* </p>
                 </div>
               ))}
             </div>
           </TabsContent>
           <TabsContent value="idols">
+           
+          </TabsContent>
+        </Tabs>
+      </div> */}{" "}
+      <div className="p-4 ">
+        {background ? (
+          <>
+            <div className="flex flex-col">
+              <img src={snappyy} className="mb-7"></img>
+              <h1 className="flex gap-7 font-bold justify-center">
+                Tell Snappyyy... how you feeling today:){" "}
+              </h1>
+            </div>
+          </>
+        ) : (
+          <>
             <div className="flex flex-col">
               <div className="flex flex-col">
-                <p className="font-bold text-xl mt-2 ml-3 mb-2">Chats</p>
                 <div
                   className="flex flex-col fixedchatsectionforchat overflow-y-auto"
                   ref={chatContainerRef}
                 >
                   {previousChats.map((chat, index) => (
                     <>
-                      <div key={index} className="flex gap-10 s">
-                        <div
-                          key={index}
-                          className="bg-violet-old mt-10 p-4 rounded-xl relative top-7"
-                        >
-                          <p>{chat}</p>
-                        </div>
+                      <div key={index} className="flex flex-col gap-2  s">
                         <div key={index}>
-                          <div className="bg-violet-new p-4 mt-10 rounded-3xl">
+                          <div className="bg-violet-new p-4 mt-10 w-fit rounded-xl relative">
                             {userChats[index]}
                           </div>
+                        </div>
+                        <div
+                          key={index}
+                          className="bg-violet-old p-4 rounded-xl w-fit relative "
+                        >
+                          <p>{chat}</p>
                         </div>
                       </div>
                     </>
@@ -418,26 +442,27 @@ Only bring up past conversations if ${name} specifically asks about something fr
                   )}
                 </div>
               </div>
-              <div className="flex flex-col mt-4 fixedchatsection">
-                <div className="flex gap-2  justify-center items-center mt-2">
-                  <input
-                    type="text"
-                    placeholder="Chat Here..."
-                    value={userInput}
-                    className="border p-2 ml-2 w-full"
-                    onChange={(e) => setuserInput(e.target.value)}
-                  />
-                  <Button
-                    className="bg-black-800 border hover:bg-blue-100"
-                    onClick={() => returnansofchat(userInput)}
-                  >
-                    <SendIcon color="black" />
-                  </Button>
-                </div>
-              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </>
+        )}
+
+        <div className="flex flex-col mt-4 fixedchatsection">
+          <div className="flex gap-2  justify-center items-center mt-2">
+            <input
+              type="text"
+              placeholder="Chat Here..."
+              value={userInput}
+              className="border p-2 ml-2 w-full"
+              onChange={(e) => setuserInput(e.target.value)}
+            />
+            <Button
+              className="bg-black-800 border hover:bg-blue-100"
+              onClick={() => returnansofchat(userInput)}
+            >
+              <SendIcon color="black" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
