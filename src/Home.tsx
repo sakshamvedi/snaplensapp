@@ -50,7 +50,7 @@ function Home({}: Props) {
   const [healthyMeals, setHealthyMeals] = useState("");
   const [avatar, setAvatar] = useState("");
   const [carbs, setCarbs] = useState("");
-  const [protien, setProtien] = useState("");
+  const [protein, setProtein] = useState("");
   const [fat, setFat] = useState("");
   React.useEffect(() => {
     setAvatar(localStorage.getItem("name"));
@@ -75,8 +75,8 @@ function Home({}: Props) {
         setHealthScore(parsedResponse.healthscore[0]);
         setHealthyMeals(parsedResponse.healthymeals[0]);
         setCarbs(parsedResponse.carbs[0]);
-        setProtien(parsedResponse.protien[0]);
-        localStorage.setItem("proteineaten", parsedResponse.protien[0]);
+        setProtein(parsedResponse.protein[0]);
+        localStorage.setItem("proteineaten", parsedResponse.protein[0]);
         setFat(parsedResponse.fat[0]);
       } catch (error) {
         console.log(error);
@@ -109,7 +109,7 @@ The JSON structure should be as follows:
 "healthscore": [numerical score],
 "healthymeals": [number of healthy meals],
 "carbs": [total carbs in grams]
- "protien" : [total protien in grams]
+ "protein" : [total protein in grams]
   "fat" : [total fat in grams]
 }
 Ensure that the response is a valid JSON object with these exact keys and array values, and Do not use any markdown formatting in your response. even if the arrays contain only one element and When you use this in your JSON,`;
@@ -123,8 +123,8 @@ Ensure that the response is a valid JSON object with these exact keys and array 
     setHealthScore(parsedResponse.healthscore[0]);
     setHealthyMeals(parsedResponse.healthymeals[0]);
     setCarbs(parsedResponse.carbs[0]);
-    localStorage.setItem("proteineaten", parsedResponse.protien[0]);
-    setProtien(parsedResponse.protien[0]);
+    localStorage.setItem("proteineaten", parsedResponse.protein[0]);
+    setProtein(parsedResponse.protein[0]);
     setFat(parsedResponse.fat[0]);
   }
 
@@ -265,9 +265,9 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
     <>
       <div className="flex p-4 justify-between w-full">
         <img src={vitalogo} alt="logo" className="logoofvita" />
-        <div className="rounded-full bg-gray-900 w-10 h-10 flex justify-center items-center border-whit">
+        <Link to ="/profile"><div className="rounded-full bg-gray-900 w-10 h-10 flex justify-center items-center border-whit">
           <p className="text-2xl text-gray-100">{avatar.slice(0, 1)}</p>
-        </div>
+        </div></Link>
       </div>
       <div className="flex justify-start items-center p-4">
         <SunIcon size={22} color="gray" />
@@ -356,9 +356,9 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
             </SwiperSlide>
             <SwiperSlide>
               <div className="flex flex-col gap-2 justify-between ml-2 p-4 border rounded-xl box0shad  w-90 my-4">
-                <h2 className="text-md font-bold">🍛 Protien</h2>
+                <h2 className="text-md font-bold">🍛 Protein</h2>
                 <p className="text-md font-bold text-lg text-gray-500 ">
-                  Consumed {protien}g{" "}
+                  Consumed {protein}g{" "}
                 </p>
               </div>
             </SwiperSlide>

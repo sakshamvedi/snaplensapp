@@ -3,6 +3,8 @@ import charss from "./assets/good.png";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAi = new GoogleGenerativeAI("AIzaSyBI5B23RXprsQeqPuER3xVzFDzmp8-ZM28");
 const model = genAi.getGenerativeModel({ model: "gemini-1.5-flash" });
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase.config";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -214,6 +216,22 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
     generatePersonHealthReport();
     setLoading(false);
   }
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Clear user data from localStorage
+        localStorage.removeItem("login");
+        localStorage.removeItem("name");
+        localStorage.removeItem("gender");
+        window.location.href = "/"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error);
+      });
+  };
+  
+
   return (
     <div>
       <div className="w-full take-padding">
@@ -368,6 +386,10 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
           ))}
         </Swiper>
       </div>
+      <Button className="w-80 my-10 ml-5" onClick={handleLogout}>
+      Logout
+    </Button>
+
     </div>
   );
 }
