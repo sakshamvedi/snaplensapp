@@ -10,6 +10,8 @@ import Food from "../src/Food";
 import Medicine from "../src/Medicine";
 import { loadavg } from "os";
 import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import LanguageSelection from "./LanguageSelection";
 
 function App() {
   const [login, setLogin] = React.useState(false);
@@ -25,8 +27,9 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={login ? [<Home />, <Footer />] : <SignIn />}
+            element={login ? [<Home />, <Footer />] : [<SignIn />]}
           />
+          <Route path="/signup" element={<SignUp/>} />
           <Route path="/chat" element={[<Footer />, <Chat />]} />
           <Route path="/scan" element={[<Footer />, <Scan />]} />
           <Route path="/profile" element={[<Footer />, <Profile />]} />

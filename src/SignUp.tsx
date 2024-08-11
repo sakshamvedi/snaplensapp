@@ -1,13 +1,13 @@
- import React, { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import hello from "./assets/running.gif";
 import { Button } from "./components/ui/button";
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase.config";
 import { useNavigate } from "react-router-dom";
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
@@ -19,9 +19,9 @@ const SignIn: React.FC = () => {
     setSelectedGender(id);
   };
 
-  const signingIn = () => {
+  const signingUp = () => {
     console.log(email, password);
-    signInWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("User Info:", user);
@@ -31,10 +31,11 @@ const SignIn: React.FC = () => {
         localStorage.setItem("name", name || "");
         localStorage.setItem("gender", selectedGender || "");
         localStorage.setItem("email", user.email || "");
-        window.location.reload();
+        
+        // Redirect to home page
+        navigate('/');
       })
       .catch((error) => {
-        alert("User does not exist! Please sign up.");
         const errorCode = error.code;
         const errorMessage = error.message;
         console.error("Error Code:", errorCode);
@@ -58,7 +59,9 @@ const SignIn: React.FC = () => {
         localStorage.setItem("name", user.displayName || "");
         localStorage.setItem("gender", selectedGender || "");
         localStorage.setItem("photoURL", user.photoURL || "");
-        window.location.reload();
+
+        // Redirect to home page
+        navigate('/');
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -120,26 +123,17 @@ const SignIn: React.FC = () => {
           ))}
         </div>
 
-        <Button className="w-full my-10" onClick={signingIn}>
-          Sign In
+        <Button className="w-full my-10" onClick={signingUp}>
+          Sign Up
         </Button>
         <div className="my-4">or</div>
 
         <Button className="w-full my-2" onClick={signInWithGoogle}>
-          Sign in with Google
+          Sign up with Google
         </Button>
-
-        <div className="my-4">
-          <p>
-            New user?{" "}
-            <Button className="underline" onClick={() => navigate('/signup')}>
-              Proceed to Sign Up
-            </Button>
-          </p>
-        </div>
       </div>
     </div>
   );
 };
 
-export default SignIn;
+export default SignUp;
