@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useCallback, useRef, useState } from "react";
+import ReadAloudButton from "./ReadAloudButton";
 import {
   CameraIcon,
   CameraOff,
@@ -87,6 +88,7 @@ function Product({}: Props) {
   const [micronutrients, setMicronutrients] = useState([]);
   const [nutritionalFacts, setNutritionalFacts] = useState([]);
   const [score, setScore] = useState(0);
+  const [combined, setCombined] = useState("");
 
   function getRandomHslColor() {
     const hue = Math.floor(Math.random() * 360); // Random hue between 0 and 360
@@ -135,6 +137,13 @@ Format the response as JSON with "name", "carbonEmissionFacts", "footprintRecomm
     const result = await model.generateContent([prompt, image]);
     const response = result.response;
     const responseText = response.text();
+    try{
+      setCombined(responseText);
+      console.log(responseText);
+      
+    }catch(error) {
+      console.log(error);
+    }
     try {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
@@ -223,6 +232,7 @@ Format the response as JSON with "name", "carbonEmissionFacts", "footprintRecomm
               <>
                 <DrawerHeader>
                   <DrawerTitle>Carbon Emission Report with ❤️</DrawerTitle>
+                  <DrawerTitle><ReadAloudButton text = {combined}/></DrawerTitle>
                   <DrawerDescription>
                     <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
                       Product : {foodName} <p>Score : {score}</p>

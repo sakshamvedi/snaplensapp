@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useCallback, useRef, useState } from "react";
+import ReadAloudButton from "./ReadAloudButton";
 import {
   CameraIcon,
   CameraOff,
@@ -78,6 +79,7 @@ function Food({}: Props) {
   const [micronutrients, setMicronutrients] = useState([]);
   const [nutritionalFacts, setNutritionalFacts] = useState([]);
   const [score, setScore] = useState(0);
+  const [combined, setCombined] = useState("");
   function storeInDb(foodName) {
     if (typeof localStorage !== "undefined") {
       let arr = JSON.parse(localStorage.getItem("foodName") || "[]");
@@ -196,6 +198,13 @@ function Food({}: Props) {
     const result = await model.generateContent([prompt, image]);
     const response = result.response;
     const responseText = response.text();
+    try{
+      setCombined(responseText);
+      console.log(responseText);
+      
+    }catch(error) {
+      console.log(error);
+    }
     try {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
@@ -284,9 +293,12 @@ function Food({}: Props) {
               <>
                 <DrawerHeader>
                   <DrawerTitle>Food Report with ❤️</DrawerTitle>
+                  <DrawerTitle><ReadAloudButton text={combined} /></DrawerTitle>
+
                   <DrawerDescription>
                     <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
-                      Food : {foodName}
+                      Food : {foodName} 
+                      
                     </p>
                   </DrawerDescription>
                 </DrawerHeader>

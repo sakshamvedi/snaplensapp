@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ReadAloudButton from "./ReadAloudButton";
 import React, { useCallback, useRef, useState } from "react";
 import {
   CameraIcon,
@@ -86,6 +87,7 @@ function Medicine({}: Props) {
   const [micronutrients, setMicronutrients] = useState([]);
   const [nutritionalFacts, setNutritionalFacts] = useState([]);
   const [score, setScore] = useState(0);
+  const [combined, setCombined] = useState("");
 
   function getRandomHslColor() {
     const hue = Math.floor(Math.random() * 360);
@@ -152,6 +154,15 @@ function Medicine({}: Props) {
     const result = await model.generateContent([prompt, image]);
     const response = result.response;
     const responseText = response.text();
+    try{
+      
+      console.log(responseText);
+      setCombined(responseText);
+
+
+    }catch(error) {
+      console.log(error);
+    }
     try {
       const parsedResponse = JSON.parse(responseText);
       console.log(parsedResponse);
@@ -229,6 +240,7 @@ function Medicine({}: Props) {
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle>Pills Report with ❤️</DrawerTitle>
+              <DrawerTitle><ReadAloudButton text = {combined} /></DrawerTitle>
               <DrawerDescription>
                 <p className="text-xl font-bold m-4 bg-indigo-100 rounded-full p-2 text-gray-800">
                   Pill Name : {foodName}
