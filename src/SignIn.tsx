@@ -144,9 +144,9 @@ const SignIn: React.FC = () => {
         </Button>
 
         <div className="my-2 flex justify-center items-center font-bold">
-          <p className="mr-2">Already a user ..?</p>
+          <p className="mr-2">New User...?</p>
           <Button variant="outline" onClick={() => navigate("/signup")}>
-            Proceed to SignIn
+            Proceed to SignUp
           </Button>
         </div>
       </div>
