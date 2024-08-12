@@ -145,7 +145,7 @@ const SignIn: React.FC = () => {
 
         <div className="my-2 flex justify-center items-center font-bold">
           <p className="mr-2">Already a user ..?</p>
-          <Button variant="outline" onClick={() => navigate("/signin")}>
+          <Button variant="outline" onClick={() => navigate("/signup")}>
             Proceed to SignIn
           </Button>
         </div>
