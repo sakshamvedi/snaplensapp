@@ -98,7 +98,7 @@ const SignIn: React.FC = () => {
         <label className="text-start font-bold w-full">Your Good Name :)</label>
         <Input
           type="text"
-          placeholder="What Should I Call You?"
+          placeholder="Your name"
           required
           className="my-4 bg-gray-100 rounded-2xl"
           onInput={(e) => setName(e.currentTarget.value)}
