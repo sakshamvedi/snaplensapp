@@ -17,7 +17,7 @@ function Footer({}: Props) {
       <div className="flex justify-between footerbottom">
         <div className="flex justify-center flex-col items-center gap-2">
           <Home />
-          <Link to="/"> Home</Link>
+          <Link to="/home"> Home</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
           <ScanIcon />
