@@ -250,7 +250,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
         </Swiper>
       </div> */}
       <div className="container p-4 flex justify-between">
-        <Link to="/">
+        <Link to="/home">
           <MoveLeftIcon />
         </Link>
         <h1 className="text-xl font-extrabold">Chats</h1>
@@ -416,7 +416,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
             <div className="flex flex-col">
               <div className="flex flex-col">
                 <div
-                  className="flex flex-col fixedchatsectionforchat overflow-y-auto"
+                  className="flex flex-col fixedchatsectionforchat overflow-y-auto marginbottom"
                   ref={chatContainerRef}
                 >
                   {previousChats.map((chat, index) => (
