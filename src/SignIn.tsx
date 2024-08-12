@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import hello from "./assets/welcome.png";
+import hello from "./assets/SnapLens.svg";
 import { Button } from "./components/ui/button";
 import {
   GoogleAuthProvider,
@@ -82,8 +82,8 @@ const SignIn: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center p-4 w-full">
-      <img src={hello} alt="Welcome" />
-      <div className="heading text-2xl font-bold">Hey , Welcome Back</div>
+      <img src={hello} alt="Welcome" width={100} className="mb-7" />
+      <div className="heading text-2xl font-bold">Welcome to SnapLens !</div>
 
       <Button
         className="w-fit my-7"
