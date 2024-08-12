@@ -98,7 +98,7 @@ const SignIn: React.FC = () => {
         <label className="text-start font-bold w-full">Your Good Name :)</label>
         <Input
           type="text"
-          placeholder="What Should I Call You?"
+          placeholder="Your name"
           required
           className="my-4 bg-gray-100 rounded-2xl"
           onInput={(e) => setName(e.currentTarget.value)}
@@ -144,9 +144,9 @@ const SignIn: React.FC = () => {
         </Button>
 
         <div className="my-2 flex justify-center items-center font-bold">
-          <p className="mr-2">Already a user ..?</p>
+          <p className="mr-2">New User...?</p>
           <Button variant="outline" onClick={() => navigate("/signup")}>
-            Proceed to SignIn
+            Proceed to SignUp
           </Button>
         </div>
       </div>

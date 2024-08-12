@@ -66,7 +66,7 @@ const SignUp: React.FC = () => {
         localStorage.setItem("photoURL", user.photoURL || "");
 
         // Redirect to home page
-        navigate("/");
+        navigate("/home");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -149,9 +149,9 @@ const SignUp: React.FC = () => {
         </div>
       </div>
       <div className="my-2 flex justify-center items-center font-bold">
-        <p className="mr-2">New user...? </p>
-        <Button variant="outline" onClick={() => navigate("/signup")}>
-          Proceed to Sign Up
+        <p className="mr-2">Already a User?</p>
+        <Button variant="outline" onClick={() => navigate("/")}>
+          Proceed to SignIn
         </Button>
       </div>
     </div>
