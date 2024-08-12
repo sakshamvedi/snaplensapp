@@ -56,7 +56,6 @@
     padding-bottom: 80px;
   }
 }
-
 .footerbottom {
   position: fixed;
   bottom: 0;
@@ -70,7 +69,11 @@
     0px 0px 2px #171a1f; /* shadow-s */
   z-index: 9999999;
 }
-
+.centre-abs{
+  display: flex;
+  margin: 0 auto;
+  margin-bottom:50px;
+}
 .logoofvita {
   height: 55px;
 }

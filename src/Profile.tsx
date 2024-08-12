@@ -386,7 +386,7 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
           ))}
         </Swiper>
       </div>
-      <Button className="w-80 my-10 ml-5" onClick={handleLogout}>
+      <Button className="w-80 my-10 ml-5 centre-abs" onClick={handleLogout}>
       Logout
     </Button>
 

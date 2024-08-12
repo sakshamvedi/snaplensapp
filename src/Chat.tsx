@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import ReadAloudButton from "./ReadAloudButton";
 import {
   Dialog,
   DialogContent,
@@ -186,9 +187,9 @@ Detailed info about ${name}'s recent habits:
 
 ${name} just asked: "${userInput}"
 
-Respond to their question as a caring friend who's fully aware of their recent lifestyle. Use your knowledge of their habits if it's relevant to the current question do not mix previour interaction with current one if not required , but don't force this information if it's not necessary. Focus on answering their current question directly.
+Respond to their question as a caring friend who's fully aware of their recent lifestyle. Use your knowledge of their habits if it's relevant to the current question. Do not mix previous interaction with current one if not required , but don't force this information if it's not necessary. Focus on answering their current question directly.
 
-Only bring up past conversations if ${name} specifically asks about something from the past or if it's crucial to answer their current question.
+Only bring up past conversations if ${name} specifically asks about something from the past or if it's crucial to answer their current question. Do not ask too many questions from the user. Instead, try to answer them directly.
 `;
     const result = await model.generateContent([prompt]);
     const response = result.response;
@@ -431,6 +432,7 @@ Only bring up past conversations if ${name} specifically asks about something fr
                           className="bg-violet-old p-4 rounded-xl w-fit relative "
                         >
                           <p>{chat}</p>
+                          <ReadAloudButton text = {chat}/>
                         </div>
                       </div>
                     </>

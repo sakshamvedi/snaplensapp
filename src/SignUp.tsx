@@ -43,6 +43,7 @@ const SignUp: React.FC = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        alert("Invalid details!");
         console.error("Error Code:", errorCode);
         console.error("Error Message:", errorMessage);
       });
