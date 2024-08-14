@@ -22,6 +22,7 @@
     "clsx": "^1.2.1",
     "embla-carousel-react": "^8.1.7",
     "firebase": "^10.12.5",
+    "latest-version": "^9.0.0",
     "lucide-react": "^0.244.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

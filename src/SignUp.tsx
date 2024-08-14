@@ -87,7 +87,7 @@ const SignUp: React.FC = () => {
       <img src={hello} alt="Welcome" />
       <div className="heading text-2xl font-bold">Hey !!! Let's Onboard </div>
 
-      <Button
+      {/* <Button
         className="w-fit my-7"
         variant="outline"
         onClick={signInWithGoogle}
@@ -97,7 +97,7 @@ const SignUp: React.FC = () => {
       </Button>
       <div className=" font-bold text-green-900 bg-green-200  p-2 rounded-xl">
         or
-      </div>
+      </div> */}
       <div className="flex flex-col items-center p-4 my-4 w-full border rounded-2xl ">
         <label className="text-start font-bold w-full">Your Good Name :)</label>
         <Input

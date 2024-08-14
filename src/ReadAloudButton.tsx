@@ -5,7 +5,7 @@ import { SpeakerIcon } from "lucide-react";
 // import ReadAloudIcon from "./assets/readaloudicon.png"
 
 const ReadAloudButton = ({ text }) => {
-  const apiKey = "AIzaSyDHSN2gsEwLV85AdVBcl4zw_1Ad1Grrl1s"; 
+  const apiKey = "AIzaSyDHSN2gsEwLV85AdVBcl4zw_1Ad1Grrl1s";
 
   const handleReadAloud = async () => {
     try {
@@ -22,15 +22,17 @@ const ReadAloudButton = ({ text }) => {
       const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
       audio.play();
     } catch (error) {
-        alert("Sorry! Error playing the audio.")
+      alert("Sorry! Error playing the audio.");
       console.error("Error with Text-to-Speech API", error);
     }
   };
 
   return (
-    <button onClick={handleReadAloud}>
-      <RxSpeakerLoud />
-    </button>
+    <>
+      <button onClick={handleReadAloud}>
+        <RxSpeakerLoud />
+      </button>
+    </>
   );
 };
 

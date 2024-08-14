@@ -85,14 +85,14 @@ const SignIn: React.FC = () => {
       <img src={hello} alt="Welcome" width={100} className="mb-7" />
       <div className="heading text-2xl font-bold">Welcome to SnapLens !</div>
 
-      <Button
+      {/* <Button
         className="w-fit my-7"
         variant="outline"
         onClick={signInWithGoogle}
       >
         <FcGoogle size={25} className="mr-4 4" />
         <p className="font-bold ">SignIn with Google</p>
-      </Button>
+      </Button> */}
 
       <div className="flex flex-col items-center p-4 my-4 w-full border rounded-2xl">
         <label className="text-start font-bold w-full">Your Good Name :)</label>
