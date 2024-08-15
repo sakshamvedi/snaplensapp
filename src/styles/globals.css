@@ -53,7 +53,6 @@
     @apply bg-background text-foreground;
     font-family: "Quicksand", sans-serif;
     font-optical-sizing: auto;
-    padding-bottom: 80px;
   }
 }
 .footerbottom {
@@ -69,10 +68,10 @@
     0px 0px 2px #171a1f; /* shadow-s */
   z-index: 9999999;
 }
-.centre-abs{
+.centre-abs {
   display: flex;
   margin: 0 auto;
-  margin-bottom:50px;
+  margin-bottom: 50px;
 }
 .logoofvita {
   height: 55px;
@@ -177,7 +176,7 @@ video {
 }
 
 .fixedchatsection {
-  position: fixed;
+  position: absolute;
   bottom: 10px;
   width: 90%;
   margin: 0 auto;

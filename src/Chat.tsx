@@ -162,7 +162,12 @@ Only bring up past conversations if ${name} specifically asks about something fr
 
   return (
     <div>
-     
+      <div className="container p-4 flex justify-between">
+        <Link to="/home">
+          <MoveLeftIcon />
+        </Link>
+        <h1 className="text-xl font-extrabold">Chat</h1>
+      </div>
       <div className="p-4 ">
         {background ? (
           <>
