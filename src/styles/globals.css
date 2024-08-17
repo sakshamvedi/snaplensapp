@@ -77,6 +77,10 @@
   height: 55px;
 }
 
+.bgpurple {
+  background-color: #4e73ff;
+}
+
 .boxstyle {
   height: 90px;
   background: #ffffffff; /* white */
@@ -440,4 +444,147 @@ video {
   color: black;
   font-weight: 800;
   width: 90%;
+}
+
+.bgcustomblue {
+  background-color: #efffff;
+}
+.bg-violetcustom {
+  background-color: #8e78fb;
+}
+
+/* HTML: <div class="loader"></div> */
+.loaders {
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #000;
+  clip-path: inset(-220%);
+  animation: l28 2s infinite linear;
+}
+@keyframes l28 {
+  0% {
+    box-shadow:
+      0 0 0 0,
+      40px 0,
+      -40px 0,
+      0 40px,
+      0 -40px;
+  }
+  10% {
+    box-shadow:
+      0 0 0 0,
+      12px 0,
+      -40px 0,
+      0 40px,
+      0 -40px;
+  }
+  20% {
+    box-shadow:
+      0 0 0 4px,
+      0px 0,
+      -40px 0,
+      0 40px,
+      0 -40px;
+  }
+  30% {
+    box-shadow:
+      0 0 0 4px,
+      0px 0,
+      -12px 0,
+      0 40px,
+      0 -40px;
+  }
+  40% {
+    box-shadow:
+      0 0 0 8px,
+      0px 0,
+      0px 0,
+      0 40px,
+      0 -40px;
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px,
+      0px 0,
+      0px 0,
+      0 12px,
+      0 -40px;
+  }
+  60% {
+    box-shadow:
+      0 0 0 12px,
+      0px 0,
+      0px 0,
+      0 0px,
+      0 -40px;
+  }
+  70% {
+    box-shadow:
+      0 0 0 12px,
+      0px 0,
+      0px 0,
+      0 0px,
+      0 -12px;
+  }
+  80% {
+    box-shadow:
+      0 0 0 16px,
+      0px 0,
+      0px 0,
+      0 0px,
+      0 0px;
+  }
+  90%,
+  100% {
+    box-shadow:
+      0 0 0 0,
+      40px 0,
+      -40px 0,
+      0 40px,
+      0 -40px;
+  }
+}
+
+.w-custom {
+  width: 48vh;
+}
+
+.bg-customblue {
+  background-color: #021526;
+  height: 100%;
+}
+.healthApple {
+  height: 50vh;
+  width: 100%;
+  background-image: url("../assets/healthyApple.png");
+  background-size: cover;
+  background-position: left;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-bottom-left-radius: 295px;
+  border-bottom-right-radius: 120px;
+  position: relative;
+  left: -2%;
+  width: 125%;
+}
+.smallLogo {
+  height: 70px;
+  width: 70px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 10px;
+}
+.bg-black-primary {
+  background-color: #171a1fff;
+}
+
+.widthhalf {
+  width: 50vw;
+  display: flex;
+  margin: 0 auto;
+}
+
+.bg-violet-custom {
+  background-color: #7e50fe28;
 }

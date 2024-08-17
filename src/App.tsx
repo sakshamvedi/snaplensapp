@@ -12,12 +12,14 @@ import { loadavg } from "os";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import LanguageSelection from "./LanguageSelection";
+import { Toast } from "./components/ui/toast";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   const [login, setLogin] = React.useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("login") === "true") {
+    if (localStorage.getItem("isAuthenticated") === "true") {
       setLogin(true);
     }
   }, []);
@@ -29,7 +31,7 @@ function App() {
             path="/"
             element={login ? [<Home />, <Footer />] : [<SignIn />]}
           />
-          <Route path="/home" element={[<Home/>, <Footer />]} />
+          <Route path="/home" element={[<Home />, <Footer />]} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/chat" element={[<Chat />]} />
           <Route path="/scan" element={[<Footer />, <Scan />]} />
