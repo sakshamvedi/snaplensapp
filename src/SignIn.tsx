@@ -1,157 +1,421 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import hello from "./assets/welcome.png";
-import { Button } from "./components/ui/button";
+import React, { useState, useRef, useEffect } from "react";
+import welcomeLogo from "./assets/vita.png";
+import seePerson from "./assets/manseeworld.png";
+import getUserName from "./assets/getusernameactual.png";
+import welcomePage from "./assets/getPassword.png";
+import lastStep from "./assets/lastStep.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Toaster } from "@/components/ui/toaster";
+import { Pagination } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import { useToast } from "@/components/ui/use-toast";
+
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import { RxTrackNext } from "react-icons/rx";
 import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth } from "./firebase.config";
+  LockIcon,
+  MailIcon,
+  MoveLeftIcon,
+  MoveRightIcon,
+  User2Icon,
+  UserSquareIcon,
+} from "lucide-react";
+import { set } from "react-hook-form";
+import { validatePassword } from "firebase/auth";
+import { Input } from "./components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
+import { Toast, ToastAction } from "@radix-ui/react-toast";
+import axios from "axios";
+type Props = {};
 
-const SignIn: React.FC = () => {
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
-  const [name, setName] = useState<string | null>(null);
-  const [email, setEmail] = useState<string>("");
+function SignIn({}: Props) {
+  const { toast } = useToast();
+
+  const suggestions = useRef<HTMLHeadingElement>(null);
+  const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [signusername, setsighnUsername] = useState<string>("");
+  const [signpassword, setsignPassword] = useState<string>("");
+  const [signname, setsignName] = useState<string>("");
+  const [error, setError] = useState(false);
+  const [errorPass, setErrorPass] = useState(false);
+  const navigate = useNavigate();
+  const click = useRef(null);
 
-  const navigate = useNavigate(); // Hook to handle navigation
-
-  const handleCheckboxChange = (id: string) => {
-    setSelectedGender(id);
+  function navigateToHome() {
+    localStorage.setItem("isAuthenticated", "false");
+    localStorage.setItem("username", "null");
+    localStorage.setItem("name", "null");
+    navigate("/home");
+  }
+  const handleButtonClick = () => {
+    if (swiper && !error) {
+      swiper.slideNext();
+      return;
+    }
   };
 
-  const signingIn = () => {
-    console.log(email, password);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("User Info:", user);
+  const handlePassButtonClick = () => {
+    if (swiper && !errorPass) {
+      swiper.slideNext();
+      return;
+    }
+  };
 
-        // Store user info
-        localStorage.setItem("login", "true");
-        localStorage.setItem("name", name || "");
-        localStorage.setItem("gender", selectedGender || "");
-        localStorage.setItem("email", user.email || "");
+  const handlePrevButtonClick = () => {
+    if (swiper && !errorPass) {
+      swiper.slidePrev();
+      return;
+    }
+  };
 
+  const validatePassword = async () => {
+    if (password.length === 0) {
+      setErrorPass(true);
+      return;
+    } else {
+      setErrorPass(false);
+      const data = {
+        username: username,
+        password: password,
+      };
+
+      console.log(data);
+
+      try {
+        handlePassButtonClick();
+        const response = await axios({
+          method: "post",
+          url: "https://snaplens-authbackend.onrender.com/login",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: data, // Use params for GET request
+        });
+        console.log(response);
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+        localStorage.setItem("name", response.data.name);
+        localStorage.setItem("isAuthenticated", "true");
+        console.log(localStorage);
         navigate("/home");
-      })
-      .catch((error) => {
-        alert("User not found! Please SignUp.");
-        navigate("/signup");
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("Error Code:", errorCode);
-        console.error("Error Message:", errorMessage);
-      });
+      } catch (error) {
+        handlePrevButtonClick();
+        toast({
+          variant: "destructive",
+          title: "Sorry , User Not Found Press Back and Sign Up",
+        });
+        // console.error("Error:", error.message);
+      }
+    }
   };
 
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
+  const validateEverything = async () => {
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+    localStorage.setItem("name", name);
 
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        const user = result.user;
-        console.log("User Info:", user);
-        console.log("Token:", token);
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        localStorage.setItem("isAuthenticated", "true");
+        resolve(null);
+      }, 1000)
+    );
 
-        // Store user info
-        localStorage.setItem("login", "true");
-        localStorage.setItem("name", user.displayName || "");
-        localStorage.setItem("gender", selectedGender || "");
-        localStorage.setItem("photoURL", user.photoURL || "");
-        window.location.reload();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error("Error Code:", errorCode);
-        console.error("Error Message:", errorMessage);
-      });
+    navigate("/home");
   };
 
-  const items = [
-    { id: "male", label: "Male" },
-    { id: "female", label: "Female" },
-  ];
+  const validateEverythingSign = async () => {
+    if (signname.length == 0) {
+      toast({
+        title: "Name cannot be empty",
+      });
+      return;
+    }
+    if (signusername.includes(" ")) {
+      toast({
+        title: "Username cannot have white spaces and extra characters",
+      });
+      return;
+    }
+    if (signusername.length == 0) {
+      toast({
+        title: "Username cannot be empty",
+      });
+      return;
+    }
+    if (signpassword.length == 0) {
+      toast({
+        title: "Password cannot be empty",
+      });
+      return;
+    }
+    if (signpassword != password) {
+      toast({
+        title: "Password Did Not Match",
+      });
+      return;
+    }
+    handlePassButtonClick();
+    const data = {
+      username: signusername,
+      password: signpassword,
+      name: signname,
+    };
+
+    try {
+      const response = await axios({
+        method: "post",
+        url: "https://snaplens-authbackend.onrender.com/signup",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data, // Use params for GET request
+      });
+
+      if (response.data.status === "success") {
+        localStorage.setItem("username", signusername);
+        localStorage.setItem("password", signpassword);
+        localStorage.setItem("name", signname);
+        localStorage.setItem("isAuthenticated", "true");
+      }
+
+      navigate("/home");
+    } catch (error) {
+      handlePrevButtonClick();
+      toast({
+        title: "Sorry , Username Already Exists try with " + signusername + "1",
+      });
+    }
+  };
+
+  const validateName = () => {
+    if (name.length == 0) {
+      return;
+    } else {
+      handlePassButtonClick();
+      validateEverything();
+      return;
+    }
+  };
+
+  const validateUsername = () => {
+    //validate there no space in username and it is not empty
+    if (username.length == 0) {
+      suggestions.current.innerText = "Username cannot be empty";
+      suggestions.current?.classList.add("text-red-900");
+      setError(true);
+      return;
+    }
+    if (username.trim() === "") {
+      suggestions.current.innerText = "Username cannot have white spaces";
+      suggestions.current?.classList.add("text-red-900");
+      setError(true);
+      return;
+    }
+    if (username.includes(" ")) {
+      suggestions.current.innerText = "Username cannot have white spaces";
+      suggestions.current?.classList.add("text-red-900");
+      setError(true);
+      return;
+    } else {
+      suggestions.current.innerText = "";
+      suggestions.current?.classList.add("text-green-900");
+      setError(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center p-4 w-full">
-      <img src={hello} alt="Welcome" />
-      <div className="heading text-2xl font-bold">Hey , Welcome Back</div>
-
-      <Button
-        className="w-fit my-7"
-        variant="outline"
-        onClick={signInWithGoogle}
+    <div className="">
+      <Swiper
+        className="mySwiper overflow-y-hidden"
+        onSwiper={(swiperInstance) => setSwiper(swiperInstance)}
       >
-        <FcGoogle size={25} className="mr-4 4" />
-        <p className="font-bold ">SignIn with Google</p>
-      </Button>
-
-      <div className="flex flex-col items-center p-4 my-4 w-full border rounded-2xl">
-        <label className="text-start font-bold w-full">Your Good Name :)</label>
-        <Input
-          type="text"
-          placeholder="Your name"
-          required
-          className="my-4 bg-gray-100 rounded-2xl"
-          onInput={(e) => setName(e.currentTarget.value)}
-        />
-
-        <label className="text-start font-bold w-full">Email</label>
-        <Input
-          type="email"
-          placeholder="Email"
-          required
-          className="my-4 bg-gray-100 rounded-2xl"
-          onInput={(e) => setEmail(e.currentTarget.value)}
-        />
-
-        <label className="text-start font-bold w-full">Password</label>
-        <Input
-          type="password"
-          placeholder="Password"
-          required
-          className="my-4 bg-gray-100 rounded-2xl"
-          onInput={(e) => setPassword(e.currentTarget.value)}
-        />
-
-        <label className="text-start font-bold w-full mt-10">
-          Your Gender 😊
-        </label>
-        <div className="flex flex-row items-center justify-start my-4 gap-4">
-          {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-2">
-              <Checkbox
-                id={item.id}
-                className="bg-red-200"
-                checked={selectedGender === item.id}
-                onClick={() => handleCheckboxChange(item.id)}
-              />
-              <label htmlFor={item.id}>{item.label}</label>
+        <SwiperSlide>
+          <div className="w-full ">
+            <div className=" gap-3 bg-customblue items-center justify-center  pb-20">
+              <div className="healthApple"></div>
+              <div className="flex flex-col gap-3 justify-start items-start ml-10">
+                <img
+                  src={welcomeLogo}
+                  alt="Welcome"
+                  className="object-fill smallLogo"
+                />
+                <h1 className="text-gray-100 text-4xl font-bold mt-7 leading-snug">
+                  India's #1 Health Encouragement App
+                </h1>
+                <p className="text-gray-300 text-sm mb-7 ">
+                  Your Health guide , Friend and Encourager
+                </p>
+                <Button
+                  className="w-80 p-6 bg-gray-200 text-gray-700 text-lg font-bold hover:bg-black hover:text-white"
+                  onClick={handleButtonClick}
+                >
+                  Get Started
+                </Button>
+                <Button
+                  className="w-80 p-6 bg-black-primary text-white text-lg hover:bg-black hover:text-white"
+                  onClick={navigateToHome}
+                >
+                  Skip
+                </Button>
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        </SwiperSlide>
+        <SwiperSlide className="h-fill">
+          <div className="bg-white h-screen flex flex-col gap-2 ">
+            <span className="flex justify-center flex items-center ">
+              <img
+                src={welcomeLogo}
+                alt="Welcome"
+                className="object-fill smallLogo"
+              />
+              {/* <h1 className="text-2xl font-black text-violet-900">SnapLens</h1> */}
+            </span>
+            <h1 className="text-2xl font-bold text-gray-900 text-center">
+              Welcome to SnapLens
+            </h1>
+            <p className="text-sm w-80 block ml-auto mr-auto  font-thin text-gray-400 text-center mt-1">
+              Sign up or login to manage your health , track and compete with
+              Friends , manage Streaks and much more
+            </p>
 
-        <Button className="w-full my-10" onClick={signingIn}>
-          Sign In
-        </Button>
+            <div className="w-full h-full mt-7">
+              <Tabs
+                defaultValue="account"
+                className="w-full  h-full bg-gray-100"
+              >
+                <TabsList className="bg-violet-custom">
+                  <TabsTrigger
+                    value="account"
+                    className="w-full widthhalf font-bold"
+                  >
+                    LogIn
+                  </TabsTrigger>
+                  <TabsTrigger value="password" className="widthhalf font-bold">
+                    SignUp
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="account" className="p-4 ">
+                  <div className="flex flex-col">
+                    <div className="relative">
+                      <User2Icon className="absolute top-3 ml-2" />
+                      <Input
+                        className="p-6 pl-10 text-violet-900 font-bold"
+                        placeholder="Enter your username"
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                      <p
+                        ref={suggestions}
+                        className="text-gray-300 text-sm mt-2 mb-2"
+                      ></p>
+                    </div>
+                    <div className="relative">
+                      <LockIcon className="absolute top-8 ml-2" />
+                      <Input
+                        className="p-6 pl-10 text-violet-900 font-bold mt-5"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    className="w-full p-6 bg-purple-900 text-purple-200  font-bold text-md mt-10 hover:bg-black hover:text-white"
+                    onClick={() => {
+                      validateUsername();
+                      validatePassword();
+                    }}
+                  >
+                    Login
+                  </Button>
+                  <p className="mt-5 text-sm text-gray-400 text-center">
+                    By Signing up you agree to our Terms of Services and Privacy
+                    Policy
+                  </p>
+                </TabsContent>
+                <TabsContent value="password" className="p-5">
+                  <div className="flex flex-col">
+                    <div className="relative">
+                      <User2Icon className="absolute top-3 ml-2" />
+                      <Input
+                        className="p-6 pl-10 text-violet-900 font-bold"
+                        placeholder="Your Name"
+                        onChange={(e) => setsignName(e.target.value)}
+                      />
+                      <p
+                        ref={suggestions}
+                        className="text-gray-300 text-sm mt-2 mb-2"
+                      ></p>
+                    </div>
+                    <div className="relative">
+                      <UserSquareIcon className="absolute top-8 ml-2" />
+                      <Input
+                        className="p-6 pl-10 text-violet-900 font-bold mt-5"
+                        placeholder="Enter your Username"
+                        onChange={(e) => setsighnUsername(e.target.value)}
+                      />
+                    </div>
+                    <div className="relative">
+                      <LockIcon className="absolute top-8 ml-2" />
+                      <Input
+                        type="password"
+                        className="p-6 pl-10 text-violet-900 font-bold mt-5"
+                        placeholder="Enter your password"
+                        onChange={(e) => setsignPassword(e.target.value)}
+                      />
+                    </div>
+                    <div className="relative">
+                      <LockIcon className="absolute top-8 ml-2" />
+                      <Input
+                        type="password"
+                        className="p-6 pl-10 text-violet-900 font-bold mt-5"
+                        placeholder="Confirm your password"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      className="w-full p-6 bg-purple-900 text-purple-200  font-bold text-md mt-10 hover:bg-black hover:text-white"
+                      onClick={() => {
+                        validateEverythingSign();
+                      }}
+                    >
+                      SignUp
+                    </Button>
+                    <p className="text-sm mt-7 text-gray-400">
+                      By Signining up you are accepting our scan what you
+                      consume policy , so we trained our recommendation system
+                      to serve better for you
+                    </p>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+        </SwiperSlide>
 
-        <div className="my-2 flex justify-center items-center font-bold">
-          <p className="mr-2">New User...?</p>
-          <Button variant="outline" onClick={() => navigate("/signup")}>
-            Proceed to SignUp
-          </Button>
-        </div>
-      </div>
+        <SwiperSlide>
+          <div className="h-screen">
+            <div className="flex flex-col gap-3 justify-center items-center pl-7 pr-7  h-full">
+              <div className="loaders"></div>
+              <h1 className="text-gray-900 text-md font-bold mt-20">
+                {" "}
+                Settings Things For you...
+              </h1>
+            </div>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+      <Toaster />
     </div>
   );
-};
+}
 
 export default SignIn;
