@@ -191,7 +191,7 @@ video {
   height: 800px;
   width: 90%;
   overflow: scroll;
-  padding-bottom: 200px;
+  padding-bottom: 250px;
 }
 
 .fixedchatsectionforchat::-webkit-scrollbar {
