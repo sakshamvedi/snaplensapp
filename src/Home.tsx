@@ -262,8 +262,8 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
     localStorage.setItem("scoreComparison", responseText);
   }
   return (
-    <>
-      <div className="flex p-4 justify-between w-full">
+    <div className = "padding-bottom">
+      <div className="flex p-4 justify-between w-full" >
         <img src={vitalogo} alt="logo" className="logoofvita" />
         <Link to ="/profile"><div className="rounded-full bg-gray-900 w-10 h-10 flex justify-center items-center border-whit">
           <p className="text-2xl text-gray-100">{avatar.slice(0, 1)}</p>
@@ -286,7 +286,7 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
           Refresh Report
         </Button>
       </div>
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-4 flex flex-col gap-2" >
         <p className="text-xl font-medium flex gap-2 items-center">
           {" "}
           <ScanFaceIcon size={32} color="gray" />
@@ -386,7 +386,7 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

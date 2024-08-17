@@ -44,6 +44,9 @@
     --chart-5: 27 87% 67%;
   }
 }
+.padding-bottom{
+  padding-bottom:20%;
+}
 
 @layer base {
   * {
@@ -53,6 +56,7 @@
     @apply bg-background text-foreground;
     font-family: "Quicksand", sans-serif;
     font-optical-sizing: auto;
+
   }
 }
 .footerbottom {
@@ -70,7 +74,7 @@
 }
 .centre-abs {
   display: flex;
-  margin: 0 auto;
+  margin: 5% auto 0 auto;
   margin-bottom: 50px;
 }
 .logoofvita {
@@ -194,9 +198,16 @@ video {
   height: 800px;
   width: 90%;
   overflow: scroll;
-  padding-bottom: 200px;
+  padding-bottom: 250px;
 }
 
+.align{
+  margin: 5% 5% 0px 5%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap:break-word;
+}
 .fixedchatsectionforchat::-webkit-scrollbar {
   display: none;
 }
@@ -552,21 +563,23 @@ video {
 
 .bg-customblue {
   background-color: #021526;
-  height: 100%;
+  height : 100vh;
+  overflow:scroll;
+
+  
 }
 .healthApple {
-  height: 50vh;
+  height: 35vh;
   width: 100%;
   background-image: url("../assets/healthyApple.png");
-  background-size: cover;
-  background-position: left;
-  background-size: cover;
+  background-size:cover;
+  background-position: center;
   background-repeat: no-repeat;
-  border-bottom-left-radius: 295px;
-  border-bottom-right-radius: 120px;
+  border-bottom-left-radius: 150px;
+  border-top-right-radius: 150px;
   position: relative;
-  left: -2%;
-  width: 125%;
+  /* left: -2%;
+  width: 125%; */
 }
 .smallLogo {
   height: 70px;
