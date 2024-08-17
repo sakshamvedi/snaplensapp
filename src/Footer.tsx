@@ -16,20 +16,20 @@ function Footer({}: Props) {
     <>
       <div className="flex justify-between footerbottom">
         <div className="flex justify-center flex-col items-center gap-2">
-          <Home />
-          <Link to="/home"> Home</Link>
+          
+          <Link to="/home" className="flex justify-center flex-col items-center gap-2"> <Home /> Home</Link>
+        </div>
+        <div >
+          
+          <Link  to="/scan" className="flex justify-center flex-col items-center gap-2"> <ScanIcon />Scan</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
-          <ScanIcon />
-          <Link to="/scan"> Scan</Link>
+          
+          <Link to="/chat" className="flex justify-center flex-col items-center gap-2"> <MessageCircleIcon />Chat</Link>
         </div>
         <div className="flex justify-center flex-col items-center gap-2">
-          <MessageCircleIcon />
-          <Link to="/chat"> Chat</Link>
-        </div>
-        <div className="flex justify-center flex-col items-center gap-2">
-          <User2Icon />
-          <Link to="/profile"> Profile</Link>
+          
+          <Link to="/profile" className="flex justify-center flex-col items-center gap-2"> <User2Icon />Profile</Link>
         </div>
       </div>
     </>

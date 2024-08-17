@@ -50,8 +50,8 @@ function SignIn({}: Props) {
 
   function navigateToHome() {
     localStorage.setItem("isAuthenticated", "false");
-    localStorage.setItem("username", "null");
-    localStorage.setItem("name", "null");
+    localStorage.setItem("username", "Guest User");
+    localStorage.setItem("name", "Guest User");
     navigate("/home");
   }
   const handleButtonClick = () => {
@@ -239,19 +239,19 @@ function SignIn({}: Props) {
       >
         <SwiperSlide>
           <div className="w-full ">
-            <div className=" gap-3 bg-customblue items-center justify-center  pb-20">
+            <div className=" gap-3 bg-customblue items-center justify-center  pb-5 ">
               <div className="healthApple"></div>
-              <div className="flex flex-col gap-3 justify-start items-start ml-10">
+              <div className="flex flex-col gap-3 justify-start items-start ml-10 align">
                 <img
                   src={welcomeLogo}
                   alt="Welcome"
                   className="object-fill smallLogo"
                 />
-                <h1 className="text-gray-100 text-4xl font-bold mt-7 leading-snug">
-                  India's #1 Health Encouragement App
+                <h1 className="text-gray-100 text-3xl font-bold mt-7 leading-snug text-center">
+                  India's 1st Health Encouragement App
                 </h1>
                 <p className="text-gray-300 text-sm mb-7 ">
-                  Your Health guide , Friend and Encourager
+                  Your Health Guide, Friend and Motivator
                 </p>
                 <Button
                   className="w-80 p-6 bg-gray-200 text-gray-700 text-lg font-bold hover:bg-black hover:text-white"

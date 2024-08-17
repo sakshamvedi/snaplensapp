@@ -233,7 +233,7 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
   
 
   return (
-    <div>
+    <div className = "padding-bottom">
       <div className="w-full take-padding">
         <div className="w-full h-1/6 flex justify-center items-center bg-abstract ">
           <div className="avatar font-bold text-4xl bg-indigo-500 flex-col text-white p-4 flex justify-center items-center h-15 absolute  h-20 w-20 text-center rounded-full border-white absvalue threedlook">
@@ -366,7 +366,7 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
         </Swiper>
       </div>
       <div className="ml-7 mt-7">
-        <h1 className="flex gap-4 text-violet-800 font-bold text-xl text-gray-600 justify-start items-center">
+        <h1 className="flex gap-4 text-violet-800 font-bold text-xl text-gray-600 justify-start items-center anime">
           <HeartIcon /> Partner Scans
         </h1>
         <Swiper
