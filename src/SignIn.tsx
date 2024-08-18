@@ -179,12 +179,10 @@ function SignIn({}: Props) {
         data: data, // Use params for GET request
       });
 
-      if (response.data.status === "success") {
-        localStorage.setItem("username", signusername);
-        localStorage.setItem("password", signpassword);
-        localStorage.setItem("name", signname);
-        localStorage.setItem("isAuthenticated", "true");
-      }
+      localStorage.setItem("username", signusername);
+      localStorage.setItem("password", signpassword);
+      localStorage.setItem("name", signname);
+      localStorage.setItem("isAuthenticated", "true");
 
       navigate("/home");
     } catch (error) {
