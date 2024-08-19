@@ -45,7 +45,7 @@ function Footer({}: Props) {
         </div>
         <div className="flex justify-center flex-col items-center gap-2 text-sm">
           <Link
-            to="/redzone"
+            to="/streaks"
             className="flex justify-center flex-col items-center gap-2 "
           >
             {" "}
