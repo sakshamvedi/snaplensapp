@@ -169,7 +169,7 @@ function Profile({}: Props) {
     const product = localStorage.getItem("product");
     const gender = localStorage.getItem("gender");
     const prompt = `Analyze: Name: ${avatar}, Gender: ${gender}, Food: ${foodheeaten}, Products: ${product}
-As a environmentalist, create a 50-word personality profile considering:
+As a environmentalist, create a 20-word personality profile considering:
 
 Environmental impact of habits
 
@@ -220,20 +220,19 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        // Clear user data from localStorage
         localStorage.removeItem("login");
         localStorage.removeItem("name");
         localStorage.removeItem("gender");
+        localStorage.removeItem("isAuthenticated");
         window.location.href = "/"; // Redirect to login page
       })
       .catch((error) => {
         console.error("Error logging out:", error);
       });
   };
-  
 
   return (
-    <div className = "padding-bottom">
+    <div className="padding-bottom">
       <div className="w-full take-padding">
         <div className="w-full h-1/6 flex justify-center items-center bg-abstract ">
           <div className="avatar font-bold text-4xl bg-indigo-500 flex-col text-white p-4 flex justify-center items-center h-15 absolute  h-20 w-20 text-center rounded-full border-white absvalue threedlook">
@@ -387,9 +386,8 @@ Use a friendly, upbeat tone. Be respectful and avoid extreme assumptions, add em
         </Swiper>
       </div>
       <Button className="w-80 my-10 ml-5 centre-abs" onClick={handleLogout}>
-      Logout
-    </Button>
-
+        Logout
+      </Button>
     </div>
   );
 }

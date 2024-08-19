@@ -14,6 +14,8 @@ import SignUp from "./SignUp";
 import LanguageSelection from "./LanguageSelection";
 import { Toast } from "./components/ui/toast";
 import { Toaster } from "./components/ui/toaster";
+import Redzone from "./Redzone";
+import Streaks from "./Streaks";
 
 function App() {
   const [login, setLogin] = React.useState(false);
@@ -32,6 +34,7 @@ function App() {
             element={login ? [<Home />, <Footer />] : [<SignIn />]}
           />
           <Route path="/home" element={[<Home />, <Footer />]} />
+          <Route path="/streaks" element={[<Streaks />, <Footer />]} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/chat" element={[<Chat />]} />
           <Route path="/scan" element={[<Footer />, <Scan />]} />

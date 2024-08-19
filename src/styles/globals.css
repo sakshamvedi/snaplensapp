@@ -44,8 +44,8 @@
     --chart-5: 27 87% 67%;
   }
 }
-.padding-bottom{
-  padding-bottom:20%;
+.padding-bottom {
+  padding-bottom: 20%;
 }
 
 @layer base {
@@ -56,20 +56,16 @@
     @apply bg-background text-foreground;
     font-family: "Quicksand", sans-serif;
     font-optical-sizing: auto;
-
   }
 }
 .footerbottom {
   position: fixed;
   bottom: 0;
-  padding: 20px;
+  padding: 13px;
   width: 100%;
   background: #ffffffff;
   font-weight: 800;
-  border-radius: 16px 16px 0px 0px;
-  box-shadow:
-    0px 2px 5px #171a1f,
-    0px 0px 2px #171a1f; /* shadow-s */
+  border-top: 2px solid rgba(128, 128, 128, 0.363);
   z-index: 9999999;
 }
 .centre-abs {
@@ -201,12 +197,12 @@ video {
   padding-bottom: 250px;
 }
 
-.align{
+.align {
   margin: 5% 5% 0px 5%;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
 .fixedchatsectionforchat::-webkit-scrollbar {
   display: none;
@@ -563,16 +559,14 @@ video {
 
 .bg-customblue {
   background-color: #021526;
-  height : 100vh;
-  overflow:scroll;
-
-  
+  height: 100vh;
+  overflow: scroll;
 }
 .healthApple {
   height: 35vh;
   width: 100%;
   background-image: url("../assets/healthyApple.png");
-  background-size:cover;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border-bottom-left-radius: 150px;

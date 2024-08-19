@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import vitalogo from "./assets/vita.png";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { AiFillMessage } from "react-icons/ai";
 import "swiper/css";
 import profilelogo from "./assets/saksham.jpeg";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -16,6 +16,8 @@ import {
   Grape,
   GrapeIcon,
   LeafIcon,
+  MessageCircleIcon,
+  MessageSquareDashedIcon,
   Pill,
   PillIcon,
   Rocket,
@@ -24,10 +26,57 @@ import {
   ScanFaceIcon,
   SunIcon,
 } from "lucide-react";
+import { LuMessagesSquare } from "react-icons/lu";
 import { Button } from "./components/ui/button";
 type Props = {};
 import { Link } from "react-router-dom";
+const WebSocketURL = "ws://localhost:8080";
+
+import { MessageSquarePlusIcon } from "lucide-react";
+import { Toaster } from "./components/ui/toaster";
+import { toast, useToast } from "@/components/ui/use-toast";
+
 function getCurrentDayAndDate() {
+  const [ws, setWs] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const socket = new WebSocket(WebSocketURL);
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "danger") {
+        toast({
+          variant: "destructive",
+          title:
+            "Hey !! Danger Alert" +
+            data.name +
+            "is in danger and his location is " +
+            data.location,
+        });
+      } else {
+        console.log("Message received:", data);
+      }
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    setWs(socket);
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
   const daysOfWeek = [
     "Sunday",
     "Monday",
@@ -52,6 +101,7 @@ function Home({}: Props) {
   const [carbs, setCarbs] = useState("");
   const [protein, setProtein] = useState("");
   const [fat, setFat] = useState("");
+  const toast = useToast();
   React.useEffect(() => {
     setAvatar(localStorage.getItem("name"));
     const SIX_HOURS_IN_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
@@ -262,12 +312,21 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
     localStorage.setItem("scoreComparison", responseText);
   }
   return (
-    <div className = "padding-bottom">
-      <div className="flex p-4 justify-between w-full" >
+    <div className="padding-bottom">
+      <div className="flex  p-4 justify-between w-full">
         <img src={vitalogo} alt="logo" className="logoofvita" />
-        <Link to ="/profile"><div className="rounded-full bg-gray-900 w-10 h-10 flex justify-center items-center border-whit">
-          <p className="text-2xl text-gray-100">{avatar.slice(0, 1)}</p>
-        </div></Link>
+        <div className="flex gap-4 items-center justify-center">
+          <Link to="/profile">
+            <div className="rounded-full bg-gray-100  border border-4 border-violet-200 rounded-full w-10 h-10 flex justify-center items-center border-whit">
+              <p className="text-2xl text-gray-900 ">{avatar.slice(0, 1)}</p>
+            </div>
+          </Link>
+          <h1 className="text-sm font-bold">
+            <Link to="/chat">
+              <AiFillMessage size={32} color="black" />
+            </Link>
+          </h1>
+        </div>
       </div>
       <div className="flex justify-start items-center p-4">
         <SunIcon size={22} color="gray" />
@@ -286,7 +345,7 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
           Refresh Report
         </Button>
       </div>
-      <div className="p-4 flex flex-col gap-2" >
+      <div className="p-4 flex flex-col gap-2">
         <p className="text-xl font-medium flex gap-2 items-center">
           {" "}
           <ScanFaceIcon size={32} color="gray" />
@@ -386,6 +445,7 @@ Please provide the answer using the following keys: "xp", "individual", "idol", 
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

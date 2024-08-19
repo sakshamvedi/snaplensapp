@@ -232,6 +232,7 @@ function SignIn({}: Props) {
   return (
     <div className="">
       <Swiper
+        allowTouchMove={false}
         className="mySwiper overflow-y-hidden"
         onSwiper={(swiperInstance) => setSwiper(swiperInstance)}
       >
@@ -388,9 +389,9 @@ function SignIn({}: Props) {
                       SignUp
                     </Button>
                     <p className="text-sm mt-7 text-gray-400">
-                      By Signining up you are accepting our scan what you
-                      consume policy , so we trained our recommendation system
-                      to serve better for you
+                      By Signing up you are accepting our scan what you consume
+                      policy , so we trained our recommendation system to serve
+                      better for you
                     </p>
                   </div>
                 </TabsContent>
