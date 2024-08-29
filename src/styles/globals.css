@@ -595,3 +595,23 @@ video {
 .bg-violet-custom {
   background-color: #7e50fe28;
 }
+
+.addButton {
+  color: white;
+  border: none;
+
+  padding: 10px 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: absolute;
+  bottom: 100px;
+  right: 10px;
+  box-shadow:
+    rgba(240, 46, 170, 0.4) 0px 5px,
+    rgba(240, 46, 170, 0.3) 0px 10px,
+    rgba(240, 46, 170, 0.2) 0px 15px,
+    rgba(240, 46, 170, 0.1) 0px 20px,
+    rgba(240, 46, 170, 0.05) 0px 25px;
+}
